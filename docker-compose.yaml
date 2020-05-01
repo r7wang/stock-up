@@ -1,0 +1,8 @@
+version: "3.7"
+
+services:
+  stock_query:
+    build:
+      context: .
+      dockerfile: Dockerfile-stock-query
+    image: stock-query:0.1
