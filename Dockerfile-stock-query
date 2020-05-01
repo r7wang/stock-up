@@ -1,0 +1,16 @@
+FROM python:3.8.2-buster
+
+ARG app_root=/opt/stock_query
+
+RUN mkdir ${app_root}
+
+COPY requirements.txt ${app_root}
+
+RUN pip install -r ${app_root}/requirements.txt
+
+COPY stock_query ${app_root}
+
+WORKDIR /opt
+
+CMD ["python", "-m", "stock_query.app"]
+
