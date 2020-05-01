@@ -1,3 +1,4 @@
 __pycache__
 .idea
+.kafka
 .python-version

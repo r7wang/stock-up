@@ -1,8 +1,46 @@
 version: "3.7"
 
+networks:
+  stock-network:
+    driver: bridge
+
 services:
-  stock_query:
+  stock-query:
     build:
       context: .
       dockerfile: Dockerfile-stock-query
+    depends_on:
+      - kafka
     image: stock-query:0.1
+    networks:
+      - stock-network
+  kafka:
+    depends_on:
+      - zookeeper
+    image: bitnami/kafka:2.5.0
+    networks:
+      - stock-network
+    ports:
+      - '9092'
+    volumes:
+      - '.kafka:/bitnami'
+    environment:
+      - ALLOW_PLAINTEXT_LISTENER=yes
+      - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
+      # - KAFKA_CFG_LISTENERS=SASL_SSL://:9092
+      # - KAFKA_CFG_ADVERTISED_LISTENERS=SASL_SSL://:9092
+      # - KAFKA_ZOOKEEPER_USER=kafka
+      # - KAFKA_ZOOKEEPER_PASSWORD=kafka_password
+      # - KAFKA_BROKER_USER=stock
+      # - KAFKA_BROKER_PASSWORD=stock
+  zookeeper:
+    image: bitnami/zookeeper:3.6.1
+    networks:
+      - stock-network
+    ports:
+      - '2181:2181'
+    environment:
+      - ALLOW_ANONYMOUS_LOGIN=yes
+      # - ZOO_ENABLE_AUTH=yes
+      # - ZOO_SERVER_USERS=kafka
+      # - ZOO_SERVER_PASSWORDS=kafka_password
