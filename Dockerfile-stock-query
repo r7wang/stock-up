@@ -1,13 +1,16 @@
 FROM python:3.8.2-buster
 
 ARG app_root=/opt/stock_query
+ARG app_user=appuser
 
+RUN useradd --create-home ${app_user}
 RUN mkdir ${app_root}
+RUN chown ${app_user} ${app_root}
+USER ${app_user}
 
+ENV PATH="/home/${app_user}/.local/bin:${PATH}"
 COPY requirements.txt ${app_root}
-
 RUN pip install -r ${app_root}/requirements.txt
-
 COPY stock_query ${app_root}
 
 WORKDIR /opt
