@@ -4,11 +4,11 @@ from typing import List
 import kafka
 from kafka.errors import NoBrokersAvailable
 
-from stock_query import utils
+from stock_common import utils
 
 
-def make_stock_quote_producer(brokers: List[str]):
-    utils.retry(
+def make_stock_quote_producer(brokers: List[str]) -> kafka.KafkaProducer:
+    return utils.retry(
         lambda: kafka.KafkaProducer(
             bootstrap_servers=brokers,
             value_serializer=lambda item: json.dumps(item).encode('utf-8'),

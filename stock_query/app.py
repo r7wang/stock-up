@@ -11,7 +11,7 @@
 #
 #
 # get_quote()
-from stock_query import settings
+from stock_common import settings
 from stock_query.kafka_builder import make_stock_quote_producer
 from stock_query.server import Server
 

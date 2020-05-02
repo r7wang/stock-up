@@ -6,7 +6,7 @@ import kafka
 import websocket
 from kafka.errors import KafkaTimeoutError
 
-from stock_query import utils
+from stock_common import utils
 from stock_query.stock_quote_parser import StockQuoteParser
 
 
@@ -64,4 +64,5 @@ class Server:
         )
         app.on_open = _on_open
         app.run_forever()
-        print('Stopping application...')
+
+        print('Stopping stock_query...')

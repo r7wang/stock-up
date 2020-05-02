@@ -5,10 +5,19 @@ networks:
     driver: bridge
 
 services:
+  stock-analyzer:
+    build:
+      context: .
+      dockerfile: stock_analyzer/Dockerfile
+    depends_on:
+      - kafka
+    image: stock-analyzer:0.1
+    networks:
+      - stock-network
   stock-query:
     build:
       context: .
-      dockerfile: Dockerfile-stock-query
+      dockerfile: stock_query/Dockerfile
     depends_on:
       - kafka
     image: stock-query:0.1
