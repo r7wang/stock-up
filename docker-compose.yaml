@@ -54,6 +54,8 @@ services:
       - stock-network
     ports:
       - '2181:2181'
+    volumes:
+      - '.zookeeper:/bitnami/zookeeper'
     environment:
       - ALLOW_ANONYMOUS_LOGIN=yes
       # - ZOO_ENABLE_AUTH=yes
