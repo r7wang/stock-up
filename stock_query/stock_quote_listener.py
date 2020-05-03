@@ -19,10 +19,10 @@ class StockQuoteListener:
         self._lock = threading.Lock()
         self._is_done = False
 
-    def start(self, message_handler: Callable) -> None:
+    def start(self, handler: Callable[[str], None]) -> None:
         """Starts listening for stock quotes if the listener has never been stopped
 
-        :param message_handler: Callback function invoked for every message.
+        :param handler: Callback function invoked for every message.
         """
 
         self._lock.acquire()
@@ -30,7 +30,7 @@ class StockQuoteListener:
             if self._is_done or self._app:
                 return
 
-            self._app = self._build(message_handler)
+            self._app = self._build(handler)
         finally:
             self._lock.release()
 
@@ -50,9 +50,9 @@ class StockQuoteListener:
         finally:
             self._lock.release()
 
-    def _build(self, message_handler: Callable) -> websocket.WebSocketApp:
+    def _build(self, handler: Callable[[str], None]) -> websocket.WebSocketApp:
         def _on_message(ws, message):
-            message_handler(message)
+            handler(message)
 
         def _on_error(ws, error):
             logger.error(error)

@@ -4,18 +4,28 @@ from typing import List
 
 from stock_common.log import logger
 from stock_common.stock_quote import StockQuote
+from stock_query.stock_quote_writer import StockQuoteWriter
 
 
-class StockQuoteReader:
-    """
-    Readers bridge raw stock quotes with their domain representation.
-    """
+class StockQuotePipeline:
+    def __init__(self, writer: StockQuoteWriter):
+        self._writer = writer
 
-    def read(self, message: str) -> List[StockQuote]:
-        """Converts raw stock quote message into one or more StockQuote objects.
+    def handler(self, message: str) -> None:
+        """Callback that receives a raw stock quote message.
 
         :param message: Raw stock quote message.
-        :return: List of StockQuote objects.
+        """
+
+        logger.debug(message)
+        quotes = self.parse(message)
+        self._writer.write(quotes)
+
+    def parse(self, message: str) -> List[StockQuote]:
+        """Converts raw stock quote message into their domain representation.
+
+        :param message: Raw stock quote message.
+        :return: List of StockQuote objects. Can be empty.
         """
 
         try:
