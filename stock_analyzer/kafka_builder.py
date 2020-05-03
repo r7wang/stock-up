@@ -1,4 +1,4 @@
-import json
+import pickle
 from typing import List
 
 import kafka
@@ -15,7 +15,7 @@ def make_stock_quote_consumer(topic: str, brokers: List[str]) -> kafka.KafkaCons
             auto_offset_reset='earliest',
             enable_auto_commit=False,
             group_id='my-group',
-            value_deserializer=lambda item: json.loads(item.decode('utf-8')),
+            value_deserializer=lambda item: pickle.loads(item),
         ),
         num_retries=15,
         exception_type=NoBrokersAvailable,
