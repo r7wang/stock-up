@@ -5,7 +5,7 @@ import kafka
 from kafka.errors import KafkaTimeoutError
 
 from stock_common import utils
-from stock_query.stock_quote import StockQuote
+from stock_common.stock_quote import StockQuote
 
 
 class StockQuoteWriter:

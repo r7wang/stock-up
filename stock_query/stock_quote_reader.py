@@ -1,8 +1,9 @@
 import json
+from decimal import Decimal
 from typing import List
 
 from stock_common.log import logger
-from stock_query.stock_quote import StockQuote
+from stock_common.stock_quote import StockQuote
 
 
 class StockQuoteReader:
@@ -40,7 +41,7 @@ class StockQuoteReader:
             lambda quote: StockQuote(
                 timestamp=quote['t'],
                 symbol=quote['s'],
-                price=quote['p'],
+                price=Decimal(quote['p']),
                 volume=quote['v'],
             ),
             quotes,
