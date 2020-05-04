@@ -8,6 +8,20 @@ Turn on service dependencies.
 docker-compose up -d zookeeper kafka influxdb grafana
 ```
 
+Configure `kafka`.
+```bash
+docker exec -it stock-up_kafka_1 bash
+kafka-configs.sh --bootstrap-server kafka:9092 --entity-type topics --entity-name stock-quotes --alter --add-config retention.ms=86400000
+
+# The line below should output something like this:
+#
+# Topic: stock-quotes
+#     PartitionCount: 1
+#     ReplicationFactor: 1
+#     Configs: segment.bytes=1073741824,retention.ms=86400000
+kafka-topics.sh --bootstrap-server kafka:9092 --describe --topics-with-overrides
+```
+
 Configure `influxdb`.
 ```bash
 docker exec -it stock-up_influxdb_1 bash
