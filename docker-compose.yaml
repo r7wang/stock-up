@@ -45,7 +45,7 @@ services:
       # - KAFKA_CFG_LISTENERS=SASL_SSL://:9092
       # - KAFKA_CFG_ADVERTISED_LISTENERS=SASL_SSL://:9092
       # - KAFKA_ZOOKEEPER_USER=kafka
-      # - KAFKA_ZOOKEEPER_PASSWORD=kafka_password
+      # - KAFKA_ZOOKEEPER_PASSWORD=kafka-password
       # - KAFKA_BROKER_USER=stock
       # - KAFKA_BROKER_PASSWORD=stock
   zookeeper:
@@ -60,4 +60,24 @@ services:
       - ALLOW_ANONYMOUS_LOGIN=yes
       # - ZOO_ENABLE_AUTH=yes
       # - ZOO_SERVER_USERS=kafka
-      # - ZOO_SERVER_PASSWORDS=kafka_password
+      # - ZOO_SERVER_PASSWORDS=kafka-password
+  influxdb:
+    image: bitnami/influxdb:1.8.0
+    networks:
+      - stock-network
+    volumes:
+      - '.influxdb:/bitnami/influxdb'
+    environment:
+      - INFLUXDB_HTTP_AUTH_ENABLED=false
+      - INFLUXDB_ADMIN_USER_PASSWORD=influxdb-password
+      # - INFLUXDB_DB=stock
+      # - INFLUXDB_USER=appuser
+      # - INFLUXDB_USER_PASSWORD=influxdb-password
+  # prometheus:
+  #   image: bitnami/prometheus:2.17.2
+  #   networks:
+  #     - stock-network
+  #   ports:
+  #     - '9090:9090'
+  #   volumes:
+  #     - '.prometheus:/prometheus'
