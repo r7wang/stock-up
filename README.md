@@ -1,6 +1,11 @@
 # stock-up
 Polls information about stocks to generate actions.
 
+## Introduction
+Running the associated services will produce metrics and visualize them in Grafana.
+
+![Metrics](./doc/images/metrics.png)
+
 ## Setup
 Turn on service dependencies.
 
