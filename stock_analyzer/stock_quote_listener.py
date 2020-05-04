@@ -8,8 +8,6 @@ from stock_common import settings
 from stock_common.log import logger
 from stock_common.stock_quote import StockQuote
 
-StockQuotesCallback = Callable[[List[StockQuote]], None]
-
 CONSUMER_POLL_TIMEOUT_MS = 1000
 CONSUMER_POLL_MAX_RECORDS = 50
 
@@ -19,14 +17,16 @@ class StockQuoteListener:
         self._consumer = consumer
         self._is_done = False
 
-    def start(self, handler: StockQuotesCallback) -> None:
+    def start(self, handler: Callable) -> None:
         """Starts listening for stock quotes if the listener has never been stopped
 
-        :param handler: Callback function invoked for every batch of stock quotes.
+        :param handler: Callback function invoked for every batch of stock quotes, with the following signature:
+            quotes: List[StockQuote]
+            return: None
         """
 
         partitions = self._consumer.partitions_for_topic(settings.TOPIC)
-        logger.info('Partitions: {}'.format(', '.join(partitions)))
+        logger.info('Partitions: {}'.format(', '.join(map(lambda partition: str(partition), partitions))))
 
         # Assume that only one partition exists.
         topic_partition = TopicPartition(topic=settings.TOPIC, partition=0)

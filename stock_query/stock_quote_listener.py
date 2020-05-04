@@ -22,7 +22,9 @@ class StockQuoteListener:
     def start(self, handler: Callable[[str], None]) -> None:
         """Starts listening for stock quotes if the listener has never been stopped
 
-        :param handler: Callback function invoked for every message.
+        :param handler: Callback function invoked for every message with the following signature:
+            message: str
+            return: None
         """
 
         self._lock.acquire()

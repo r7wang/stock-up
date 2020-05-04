@@ -29,7 +29,8 @@ class StockQuotePipeline:
         """
 
         try:
-            data = json.loads(message)
+            # Ensures that we don't lose any precision while loading the JSON.
+            data = json.loads(message, parse_float=lambda val: Decimal(val))
         except json.decoder.JSONDecodeError:
             logger.error('Unknown message: {}'.format(message))
             return []
@@ -48,11 +49,12 @@ class StockQuotePipeline:
 
         quotes = data['data']
         return list(map(
+            # Ensure that we always maintain correct data types.
             lambda quote: StockQuote(
-                timestamp=quote['t'],
-                symbol=quote['s'],
+                timestamp=int(quote['t']),
+                symbol=str(quote['s']),
                 price=Decimal(quote['p']),
-                volume=quote['v'],
+                volume=int(quote['v']),
             ),
             quotes,
         ))

@@ -1,9 +1,8 @@
 import heapq
 from collections import deque, defaultdict
 from decimal import Decimal
-from typing import Deque, List, Dict, Optional
+from typing import Deque, Dict, Iterator, List, Optional
 
-from stock_analyzer.time_util import TimeUtil
 from stock_common.stock_quote import StockQuote
 
 
@@ -14,7 +13,6 @@ class TimeWindow:
         :param interval: Time interval of the window, in milliseconds.
         """
         self._interval = interval
-        self._time_util = TimeUtil()
 
         # Stores stock quote prices for efficient min/max range.
         self._range_min_heap: List[Decimal] = []
@@ -42,14 +40,14 @@ class TimeWindow:
     def get_transaction_count(self) -> int:
         return len(self._quotes)
 
-    def update(self, quotes: List[StockQuote]) -> None:
+    def update(self, quotes: Iterator[StockQuote], now_timestamp: int) -> None:
         """
         Update all necessary metadata to allow fast retrieval of metrics for stock quotes within the last time
         interval.
 
         :param quotes: Quotes to be added to the time window.
+        :param now_timestamp: Used as the current timestamp to decide which quotes to exclude from the window.
         """
-        now_timestamp = self._time_util.now()
         min_timestamp = now_timestamp - self._interval
 
         self._add_new_quotes(quotes)
@@ -63,7 +61,7 @@ class TimeWindow:
         self._realign_range_min_heap()
         self._realign_range_max_heap()
 
-    def _add_new_quotes(self, quotes: List[StockQuote]) -> None:
+    def _add_new_quotes(self, quotes: Iterator[StockQuote]) -> None:
         for quote in quotes:
             self._quotes.append(quote)
 
