@@ -40,6 +40,9 @@ class TimeWindow:
     def get_transaction_count(self) -> int:
         return len(self._quotes)
 
+    def get_volume(self) -> int:
+        return self._count_prices_volume
+
     def update(self, quotes: Iterator[StockQuote], now_timestamp: int) -> None:
         """
         Update all necessary metadata to allow fast retrieval of metrics for stock quotes within the last time

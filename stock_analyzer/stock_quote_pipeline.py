@@ -32,13 +32,13 @@ class StockQuotePipeline:
         if not metric_data:
             return
 
-        logger.debug('Influx write points: {}'.format(metric_data))
         write_result = self._db_client.write_points(
             points=metric_data,
             time_precision='ms',
             protocol='line',
         )
-        logger.debug('Influx write result: {}'.format(write_result))
+        if not write_result:
+            logger.warn('Could not write to influx')
 
     def _get_metrics(self, now_timestamp: int) -> List[str]:
         """Get list of metrics in InfluxDB line format
@@ -54,13 +54,21 @@ class StockQuotePipeline:
         for symbol in self._time_windows:
             time_window = self._time_windows[symbol]
 
-            transactions_metric = self._format_int_metric(
+            trans_metric = self._format_int_metric(
                 'transactions',
                 symbol,
                 time_window.get_transaction_count(),
                 now_timestamp,
             )
-            metric_data.append(transactions_metric)
+            metric_data.append(trans_metric)
+
+            volume_metric = self._format_int_metric(
+                'volume',
+                symbol,
+                time_window.get_volume(),
+                now_timestamp,
+            )
+            metric_data.append(volume_metric)
 
             min_price = time_window.get_min_price()
             if min_price:
@@ -81,6 +89,26 @@ class StockQuotePipeline:
                     now_timestamp,
                 )
                 metric_data.append(max_price_metric)
+
+            avg_price_trans = time_window.get_average_price_by_transaction()
+            if avg_price_trans:
+                avg_price_trans_metric = self._format_float_metric(
+                    'avg_price_trans',
+                    symbol,
+                    float(avg_price_trans),
+                    now_timestamp,
+                )
+                metric_data.append(avg_price_trans_metric)
+
+            avg_price_volume = time_window.get_average_price_by_volume()
+            if avg_price_volume:
+                avg_price_volume_metric = self._format_float_metric(
+                    'avg_price_volume',
+                    symbol,
+                    float(avg_price_volume),
+                    now_timestamp,
+                )
+                metric_data.append(avg_price_volume_metric)
 
         return metric_data
 
