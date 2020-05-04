@@ -73,6 +73,14 @@ services:
       # - INFLUXDB_DB=stock
       # - INFLUXDB_USER=appuser
       # - INFLUXDB_USER_PASSWORD=influxdb-password
+  grafana:
+    image: bitnami/grafana:6.7.3
+    networks:
+      - stock-network
+    ports:
+      - '9997:3000'
+    volumes:
+      - '.grafana_data:/opt/bitnami/grafana/data'
   # prometheus:
   #   image: bitnami/prometheus:2.17.2
   #   networks:
