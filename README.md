@@ -45,3 +45,8 @@ Start generating stock quotes.
 ```bash
 docker-compose up -d stock-query
 ```
+
+## Known Issues
+* The websocket occasionally closes the connection (for reasons currently unknown), requiring the connection to be restarted. Unfortunately, this still takes a few seconds so we lose at least a few seconds worth of data.
+* If the stock analyzer service dies, then all state required to maintain the time windows is also lost. A minimum of 60 seconds (configurable) is required to restore accurate metrics.
+* If the stock query service dies, a manual restart is needed and a permanent loss of data is incurred during the downtime.
