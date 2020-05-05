@@ -3,7 +3,6 @@ from collections import defaultdict
 from typing import List
 
 from stock_analyzer.metric_generator import MetricGenerator
-from stock_analyzer.time_util import TimeUtil
 from stock_analyzer.time_window import TimeWindow
 from stock_common.influxdb import MetricWriter
 from stock_common.stock_quote import StockQuote
@@ -14,14 +13,16 @@ class StockQuotePipeline:
         self._metric_gen = MetricGenerator()
         self._metric_writer = MetricWriter()
         self._time_windows = defaultdict(lambda: TimeWindow(interval=60000))
-        self._time_util = TimeUtil()
 
     def handler(self, quotes: List[StockQuote]) -> None:
-        now_timestamp = self._time_util.now()
+        # Don't use the current timestamp because we may be late in processing stock quotes. We still want to preserve
+        # even distribution of metrics even if we're recovering from a backlog. Otherwise, only a single data point
+        # will be written at the current timestamp, giving the perception of choppy data.
+        last_timestamp = quotes[len(quotes) - 1].timestamp
         for symbol, group in itertools.groupby(quotes, lambda quote: quote.symbol):
-            self._time_windows[symbol].update(group, now_timestamp)
+            self._time_windows[symbol].update(group, last_timestamp)
 
-        metric_data = self._get_metrics(now_timestamp)
+        metric_data = self._get_metrics(last_timestamp)
         if not metric_data:
             return
 

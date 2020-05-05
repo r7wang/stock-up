@@ -24,12 +24,16 @@ class TimeWindow:
         self._sum_prices_trans: Decimal = Decimal('0')
         self._sum_prices_volume: Decimal = Decimal('0')
         self._count_prices_volume: int = 0
+        self._last_price: Optional[Decimal] = None
 
     def get_average_price_by_transaction(self) -> Optional[Decimal]:
         return self._sum_prices_trans / len(self._quotes) if self._quotes else None
 
     def get_average_price_by_volume(self) -> Optional[Decimal]:
         return self._sum_prices_volume / self._count_prices_volume if self._count_prices_volume else None
+
+    def get_last_price(self) -> Optional[Decimal]:
+        return self._last_price
 
     def get_min_price(self) -> Optional[Decimal]:
         return self._range_min_heap[0] if self._range_min_heap else None
@@ -72,6 +76,7 @@ class TimeWindow:
             self._sum_prices_trans += quote.price
             self._sum_prices_volume += quote.price * quote.volume
             self._count_prices_volume += quote.volume
+            self._last_price = quote.price
 
             # Ensures that range heaps have no duplicate prices.
             if self._range_counter[quote.price] == 0:

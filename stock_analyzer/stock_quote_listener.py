@@ -32,8 +32,10 @@ class StockQuoteListener:
         topic_partition = TopicPartition(topic=settings.TOPIC, partition=0)
         begin_offsets = self._consumer.beginning_offsets([topic_partition])
         end_offsets = self._consumer.end_offsets([topic_partition])
+        last_committed_offset = self._consumer.committed(topic_partition)
         logger.info('Starting offset: {}'.format(begin_offsets[topic_partition]))
         logger.info('Last offset: {}'.format(end_offsets[topic_partition]))
+        logger.info('Last committed offset: {}'.format(last_committed_offset))
 
         while not self._is_done:
             quotes, max_offset = self._poll_records(topic_partition)
@@ -41,6 +43,7 @@ class StockQuoteListener:
                 continue
 
             handler(quotes)
+            logger.debug('Max offset: {}'.format(max_offset))
             self._commit_offsets(topic_partition, max_offset)
 
     def stop(self) -> None:

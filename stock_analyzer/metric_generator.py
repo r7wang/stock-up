@@ -28,6 +28,7 @@ class MetricGenerator:
             return [
                 *format_metric('transactions', time_window.get_transaction_count()),
                 *format_metric('volume', time_window.get_volume()),
+                *format_metric('last_price', time_window.get_last_price()),
                 *format_metric('min_price', time_window.get_min_price()),
                 *format_metric('max_price', time_window.get_max_price()),
                 *format_metric('avg_price_trans', time_window.get_average_price_by_transaction()),
