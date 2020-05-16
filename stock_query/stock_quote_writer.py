@@ -1,37 +1,24 @@
-from collections import deque
 from typing import List
 
-import kafka
-from kafka.errors import KafkaTimeoutError
-
-from stock_common import utils
 from stock_common.stock_quote import StockQuote
+from stock_query.deduplication_cache import DeduplicationCache
+from stock_query.stock_quote_producer import StockQuoteProducer
 
 
 class StockQuoteWriter:
     """
-    Writes stock quotes to a Kafka producer.
+    Writes stock quotes to a stock quote producer.
     """
 
-    def __init__(self, producer: kafka.KafkaProducer, topic: str):
+    def __init__(self, producer: StockQuoteProducer):
         self._producer = producer
-        self._topic = topic
-        self._dedup_cache = deque()
-        self._dedup_cache_max_size = 10
+        self._dedup_cache = DeduplicationCache()
 
     def write(self, quotes: List[StockQuote]) -> None:
         for quote in quotes:
-            quote_hash = quote.get_hash()
-            if quote_hash in self._dedup_cache:
+            if self._dedup_cache.is_duplicate(quote):
                 continue
 
-            if len(self._dedup_cache) > self._dedup_cache_max_size:
-                self._dedup_cache.popleft()
-            self._dedup_cache.append(quote_hash)
-
-            utils.retry(
-                lambda: self._producer.send(self._topic, quote),
-                num_retries=15,
-                exception_type=KafkaTimeoutError,
-                error_message='Kafka timed out...',
-            )
+            # TODO: If the retry fails because Kafka/RMQ is not ready to accept connections, then we should add the
+            #       message to a buffer.
+            self._producer.send(quote)
