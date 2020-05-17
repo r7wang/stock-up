@@ -14,6 +14,8 @@ services:
     image: stock-analyzer:0.1
     networks:
       - stock-network
+    environment:
+      - MESSAGE_QUEUE_TYPE=rmq
   stock-query:
     build:
       context: .
@@ -23,6 +25,8 @@ services:
     image: stock-query:0.1
     networks:
       - stock-network
+    environment:
+      - MESSAGE_QUEUE_TYPE=rmq
   kafka:
     hostname: kafka
     depends_on:

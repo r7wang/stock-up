@@ -29,20 +29,7 @@ class KafkaConsumer(StockQuoteListener):
             quotes: List[StockQuote]
             return: None
         """
-        self._consumer: kafka.KafkaConsumer = utils.retry(
-            lambda: kafka.KafkaConsumer(
-                self._topic,
-                bootstrap_servers=self._brokers,
-                auto_offset_reset='earliest',
-                enable_auto_commit=False,
-                group_id='my-group',
-                value_deserializer=lambda item: pickle.loads(item),
-            ),
-            None,
-            num_retries=15,
-            exception_type=NoBrokersAvailable,
-            error_message='No brokers available...',
-        )
+        self._connect()
 
         partitions = self._consumer.partitions_for_topic(settings.TOPIC)
         logger.info('Partitions: {}'.format(', '.join(map(lambda partition: str(partition), partitions))))
@@ -57,13 +44,7 @@ class KafkaConsumer(StockQuoteListener):
         logger.info('Last committed offset: {}'.format(last_committed_offset))
 
         while not self._is_done:
-            quotes, max_offset = self._poll_records(topic_partition)
-            if not quotes:
-                continue
-
-            handler(quotes)
-            logger.debug('Max offset: {}'.format(max_offset))
-            self._commit_offsets(topic_partition, max_offset)
+            self._process_batch(topic_partition, handler)
 
         logger.info("Closing Kafka consumer...")
         self._consumer.close(autocommit=False)
@@ -86,6 +67,22 @@ class KafkaConsumer(StockQuoteListener):
             topic_partition: OffsetAndMetadata(offset=offset + 1, metadata=''),
         })
 
+    def _connect(self) -> None:
+        self._consumer: kafka.KafkaConsumer = utils.retry(
+            lambda: kafka.KafkaConsumer(
+                self._topic,
+                bootstrap_servers=self._brokers,
+                auto_offset_reset='earliest',
+                enable_auto_commit=False,
+                group_id='my-group',
+                value_deserializer=lambda item: pickle.loads(item),
+            ),
+            None,
+            num_retries=15,
+            exception_type=NoBrokersAvailable,
+            error_message='No brokers available...',
+        )
+
     def _poll_records(self, topic_partition: TopicPartition) -> (List[StockQuote], int):
         """Polls for records from the partition of a given topic.
 
@@ -105,3 +102,12 @@ class KafkaConsumer(StockQuoteListener):
             quote: StockQuote = message.value
             quotes.append(quote)
         return quotes, max_offset
+
+    def _process_batch(self, topic_partition: TopicPartition, handler: Callable) -> None:
+        quotes, max_offset = self._poll_records(topic_partition)
+        if not quotes:
+            return
+
+        handler(quotes)
+        logger.debug('Max offset: {}'.format(max_offset))
+        self._commit_offsets(topic_partition, max_offset)

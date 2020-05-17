@@ -1,4 +1,8 @@
+import os
+
 API_TOKEN = 'bqlk517rh5rfdbi8pdig'
+
+MESSAGE_QUEUE_TYPE = os.environ.get('MESSAGE_QUEUE_TYPE')
 
 BROKERS = ['kafka:9092']
 TOPIC = 'stock-quotes'
