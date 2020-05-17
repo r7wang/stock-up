@@ -12,31 +12,39 @@ from stock_query.stock_quote_producer import StockQuoteProducer
 
 class KafkaProducer(StockQuoteProducer):
     def __init__(self, brokers: List[str], topic: str):
+        self._brokers = brokers
         self._topic = topic
-        self._producer: kafka.KafkaProducer = self._connect(brokers)
+        self._producer = None
 
-    def close(self):
+    def close(self) -> None:
+        """Gracefully terminate connection between the producer and the broker."""
+
         logger.info('Flushing Kafka producer...')
         self._producer.flush()
         self._producer.close()
 
-    def send(self, quote: StockQuote):
+    def connect(self) -> None:
+        """Instantiate connection between the producer and the broker."""
+
+        logger.info('Connecting to Kafka broker...')
+        self._producer = utils.retry(
+            lambda: kafka.KafkaProducer(
+                bootstrap_servers=self._brokers,
+                value_serializer=lambda item: pickle.dumps(item),
+            ),
+            None,
+            num_retries=15,
+            exception_type=NoBrokersAvailable,
+            error_message='Kafka broker unavailable...',
+        )
+
+    def send(self, quote: StockQuote) -> None:
+        """Send a stock quote to the broker."""
+
         utils.retry(
             lambda: self._producer.send(self._topic, quote),
             None,
             num_retries=15,
             exception_type=KafkaTimeoutError,
             error_message='Kafka timed out...',
-        )
-
-    def _connect(self, brokers: List[str]):
-        logger.info('Connecting to Kafka broker...')
-        return utils.retry(
-            lambda: kafka.KafkaProducer(
-                bootstrap_servers=brokers,
-                value_serializer=lambda item: pickle.dumps(item),
-            ),
-            num_retries=15,
-            exception_type=NoBrokersAvailable,
-            error_message='Kafka broker unavailable...',
         )
