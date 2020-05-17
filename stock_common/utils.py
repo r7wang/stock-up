@@ -1,7 +1,24 @@
+import signal
 import time
 from typing import Any, Callable, Optional, Type
 
 from stock_common.log import logger
+
+
+def handle_termination_signal(listener):
+    """Handles common signals using a standard approach to ensure that applications terminate gracefully.
+
+    :param listener: Must expose a stop() function.
+    """
+
+    def signal_stop(sig_num: int, frame):
+        logger.info('Handling signal {}'.format(sig_num))
+        if listener:
+            logger.info('Stopping listener...')
+            listener.stop()
+
+    signal.signal(signal.SIGINT, signal_stop)
+    signal.signal(signal.SIGTERM, signal_stop)
 
 
 def retry(
