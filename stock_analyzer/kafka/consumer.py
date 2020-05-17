@@ -1,6 +1,6 @@
 import pickle
 from collections import Callable
-from typing import List, Optional
+from typing import List
 
 import kafka
 from kafka import OffsetAndMetadata, TopicPartition
@@ -71,6 +71,21 @@ class KafkaConsumer(StockQuoteListener):
     def stop(self) -> None:
         self._is_done = True
 
+    def _commit_offsets(self, topic_partition: TopicPartition, offset: int):
+        """Commits offsets for the partition of a given topic.
+
+        This effectively advances the index so that future reads from the same Kafka consumer group will not read any
+        records up to that offset.
+
+        :param topic_partition: Partition of the topic where offsets are to be committed.
+        :param offset: Largest offset read so far.
+        :return:
+        """
+
+        self._consumer.commit({
+            topic_partition: OffsetAndMetadata(offset=offset + 1, metadata=''),
+        })
+
     def _poll_records(self, topic_partition: TopicPartition) -> (List[StockQuote], int):
         """Polls for records from the partition of a given topic.
 
@@ -90,18 +105,3 @@ class KafkaConsumer(StockQuoteListener):
             quote: StockQuote = message.value
             quotes.append(quote)
         return quotes, max_offset
-
-    def _commit_offsets(self, topic_partition: TopicPartition, offset: int):
-        """Commits offsets for the partition of a given topic.
-
-        This effectively advances the index so that future reads from the same Kafka consumer group will not read any
-        records up to that offset.
-
-        :param topic_partition: Partition of the topic where offsets are to be committed.
-        :param offset: Largest offset read so far.
-        :return:
-        """
-
-        self._consumer.commit({
-            topic_partition: OffsetAndMetadata(offset=offset + 1, metadata=''),
-        })

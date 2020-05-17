@@ -1,6 +1,6 @@
 import signal
 
-from stock_analyzer.kafka.consumer import KafkaConsumer
+from stock_analyzer.kafka import KafkaConsumer
 from stock_analyzer.stock_quote_pipeline import StockQuotePipeline
 from stock_common import settings
 from stock_common.log import logger
