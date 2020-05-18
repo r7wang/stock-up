@@ -2,6 +2,8 @@ import os
 
 API_TOKEN = 'bqlk517rh5rfdbi8pdig'
 
+CONFIG_SERVER = 'stock-config'
+
 MESSAGE_QUEUE_TYPE = os.environ.get('MESSAGE_QUEUE_TYPE')
 
 BROKERS = ['kafka:9092']
