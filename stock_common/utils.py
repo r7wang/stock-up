@@ -2,7 +2,7 @@ import signal
 import time
 from typing import Any, Callable, Optional, Type
 
-from stock_common.log import logger
+from stock_common.logging import logger
 
 
 def handle_termination_signal(listener):

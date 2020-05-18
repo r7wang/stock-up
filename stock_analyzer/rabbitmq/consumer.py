@@ -8,7 +8,7 @@ from pika.spec import Basic, BasicProperties
 
 from stock_analyzer.stock_quote_listener import StockQuoteListener
 from stock_common import settings, utils
-from stock_common.log import logger
+from stock_common.logging import logger
 from stock_common.stock_quote import StockQuote
 
 

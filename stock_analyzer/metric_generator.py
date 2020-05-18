@@ -3,7 +3,7 @@ from typing import List, Optional, Union
 
 from stock_analyzer.time_window import TimeWindow
 from stock_common.influxdb import MetricFormatter
-from stock_common.log import logger
+from stock_common.logging import logger
 
 OptionalNumeric = Optional[Union[Decimal, float, int]]
 

@@ -1,6 +1,6 @@
 from stock_common import settings, utils
 from stock_common.config import ConfigListener
-from stock_common.log import LoggingReactor
+from stock_common.logging import LoggingReactor
 from stock_query.producer_factory import ProducerFactory
 from stock_query.stock_quote_listener import StockQuoteListener
 from stock_query.stock_quote_pipeline import StockQuotePipeline

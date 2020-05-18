@@ -2,7 +2,7 @@ import json
 from decimal import Decimal
 from typing import List
 
-from stock_common.log import logger
+from stock_common.logging import logger
 from stock_common.stock_quote import StockQuote
 from stock_query.stock_quote_writer import StockQuoteWriter
 

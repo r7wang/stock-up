@@ -4,7 +4,7 @@ import influxdb
 from influxdb.exceptions import InfluxDBClientError
 
 from stock_common import settings
-from stock_common.log import logger
+from stock_common.logging import logger
 
 
 class MetricWriter:

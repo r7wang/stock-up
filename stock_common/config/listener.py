@@ -1,70 +1,17 @@
 import re
-import threading
 from typing import Optional, List, Dict
 
 import etcd3
 from etcd3 import Etcd3Client
-from etcd3.etcdrpc.rpc_pb2 import ResponseHeader
 from etcd3.events import Event, PutEvent, DeleteEvent
 from etcd3.watch import WatchResponse
 
-from stock_common.log import logger
-
-
-class ConfigBucket:
-    def __init__(self):
-        self._data = {}
-        self._data_revision = {}
-        self._lock = threading.Lock()
-
-    def int(self, key: str) -> Optional[int]:
-        val = self._data.get(key)
-        if not val:
-            return None
-        return int(val)
-
-    def str(self, key: str) -> Optional[str]:
-        val = self._data.get(key)
-        if not val:
-            return None
-        return str(val)
-
-    def remove(self, key: str) -> None:
-        self._lock.acquire()
-        try:
-            if key not in self._data:
-                return
-
-            del self._data[key]
-            del self._data_revision[key]
-        finally:
-            self._lock.release()
-        self._print()
-
-    def set(self, key: str, val: str, revision: int) -> bool:
-        self._lock.acquire()
-        try:
-            if key in self._data_revision and self._data_revision[key] >= revision:
-                return False
-
-            self._data[key] = val
-            self._data_revision[key] = revision
-        finally:
-            self._lock.release()
-        self._print()
-        return True
-
-    def _print(self):
-        for key in self._data:
-            logger.info('ConfigBucket: key={}, data={}, revision={}'.format(
-                key,
-                self._data[key],
-                self._data_revision[key],
-            ))
+from stock_common.config import ConfigBucket, ConfigReactor
+from stock_common.logging import logger
 
 
 class ConfigListener:
-    def __init__(self, config_server: str, base_prefix: str, reactors: Dict):
+    def __init__(self, config_server: str, base_prefix: str, reactors: Dict[str, ConfigReactor]):
         self._config_server = config_server
         self._base_prefix = base_prefix
         self._reactors = reactors
@@ -93,8 +40,7 @@ class ConfigListener:
         return key.decode('utf-8')
 
     def _key_suffix(self, key: str) -> Optional[str]:
-        """
-        Strips the base prefix from the given key.
+        """Strip the base prefix from the given key.
 
         :param key: Fully qualified key.
         :return: Key suffix, without the base prefix.
@@ -107,8 +53,9 @@ class ConfigListener:
         return match[1]
 
     def _on_event(self, response: WatchResponse) -> None:
-        """
-        Callback function for watched keys. This function is invoked on a separate thread.
+        """Callback function for watched keys.
+
+        This function is invoked on a separate thread.
 
         :param response: Contains a response header with metadata and one or more events. Only put and delete events
                          are known and supported.
@@ -117,16 +64,14 @@ class ConfigListener:
         events: List[Event] = response.events
         for event in events:
             if isinstance(event, PutEvent):
-                header: ResponseHeader = response.header
-                self._update_key(event.key, event.value, header.revision)
+                self._update_key(event.key, event.value, event.version)
             elif isinstance(event, DeleteEvent):
                 self._remove_key(event.key)
             else:
                 logger.warn('Config listener could not handle event: type={}'.format(type(event)))
 
     def _remove_key(self, key: bytes) -> None:
-        """
-        Remove the key.
+        """Remove the key.
 
         :param key: Key for the data to be removed.
         """
@@ -134,19 +79,19 @@ class ConfigListener:
         str_key = self._key_suffix(self._decode(key))
         self._bucket.remove(key=str_key)
 
-    def _update_key(self, key: bytes, val: bytes, revision: int) -> None:
-        """
-        Update the key, if the revision is greater than what is currently known. If the update triggers a change to the
-        underlying data, then signal the appropriate reactors.
+    def _update_key(self, key: bytes, val: bytes, version: int) -> None:
+        """Attempt to update the key.
+
+        If the update triggers a change to the underlying data, then signal the appropriate reactors.
 
         :param key: Key for the data to be updated.
         :param val: Value associated with the given key.
-        :param revision: Revision associated with the given value.
+        :param version: Version associated with the given value.
         """
 
         str_key = self._key_suffix(self._decode(key))
         str_val = self._decode(val)
-        logger.info('Updating key: key={}, val={}, revision={}'.format(str_key, str_val, revision))
-        modified = self._bucket.set(key=str_key, val=str_val, revision=revision)
+        modified = self._bucket.update(key=str_key, val=str_val, version=version)
         if modified and str_key in self._reactors:
+            logger.info('Config update: {} = {}, version {}'.format(str_key, str_val, version))
             self._reactors[str_key].react(str_val)

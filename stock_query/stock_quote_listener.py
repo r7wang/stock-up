@@ -3,7 +3,7 @@ from typing import Any, Callable, Optional
 
 import websocket
 
-from stock_common.log import logger
+from stock_common.logging import logger
 
 
 class StockQuoteListener:

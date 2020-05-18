@@ -9,7 +9,7 @@ from pika.exceptions import AMQPConnectionError, ConnectionClosed, NackError
 from pika.frame import Method
 
 from stock_common import settings, utils
-from stock_common.log import logger
+from stock_common.logging import logger
 from stock_common.stock_quote import StockQuote
 from stock_query.stock_quote_producer import StockQuoteProducer
 
