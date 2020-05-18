@@ -11,6 +11,7 @@ services:
       dockerfile: stock_analyzer/Dockerfile
     depends_on:
       - kafka
+      - stock-config
     image: stock-analyzer:0.1
     networks:
       - stock-network
@@ -22,11 +23,23 @@ services:
       dockerfile: stock_query/Dockerfile
     depends_on:
       - kafka
+      - stock-config
     image: stock-query:0.1
     networks:
       - stock-network
     environment:
       - MESSAGE_QUEUE_TYPE=rmq
+  stock-config:
+    image: bitnami/etcd:3.4.7
+    networks:
+      - stock-network
+    ports:
+      - '2379:2379'
+      - '2380:2380'
+    volumes:
+      - '.etcd_data:/bitnami/etcd'
+    environment:
+      - ALLOW_NONE_AUTHENTICATION=yes
   kafka:
     hostname: kafka
     depends_on:

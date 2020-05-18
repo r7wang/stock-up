@@ -1,4 +1,5 @@
 __pycache__
+.etcd_data
 .grafana_data
 .idea
 .influxdb

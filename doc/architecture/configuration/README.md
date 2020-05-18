@@ -25,3 +25,19 @@ value. This can be abstracted through the use of good client libraries.
 There are several services that we can use to synchronize dynamic configuration, including:
 * [Apache ZooKeeper](https://zookeeper.apache.org/)
 * [etcd](https://etcd.io/)
+
+### Use Cases
+Some concrete use cases of dynamic configuration for this application include:
+* defining subscriptions
+* defining statistical thresholds and intervals
+* defining resource names (hosts, queues, topics, etc.)
+* defining logging levels (to assist in debugging)
+
+### Implementation
+* generate a base path for the keys of a given application
+* watch all child keys of the base path
+* application receives key updates through callbacks
+* application makes frequent requests for current key value and caches value in memory or to a persistent store
+
+### Articles
+[Robinhood: A Simple Implementation of Dynamic Configuration](https://robinhood.engineering/a-simple-implementation-of-dynamic-configuration-71383bcc803b)
