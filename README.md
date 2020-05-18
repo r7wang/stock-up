@@ -58,6 +58,11 @@ rabbitmqctl add_user stock-query rmq-password
 rabbitmqctl set_permissions -p stocks stock-query ".*" ".*" ".*"
 ```
 
+## Configuration
+See the service-level documentation for details.  
+[Configuring stock-query](stock_query)  
+[Configuring stock-analyzer](stock_analyzer)  
+
 ## Known Issues
 * The websocket occasionally closes the connection (for reasons currently unknown), requiring the connection to be
   restarted. Unfortunately, this still takes a few seconds so we lose at least a few seconds worth of data.
