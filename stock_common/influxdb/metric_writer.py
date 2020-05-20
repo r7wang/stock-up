@@ -26,6 +26,7 @@ class MetricWriter:
 
     def write(self, metric_data: List[str]) -> None:
         try:
+            self._logger.debug('metric data: {}'.format(metric_data))
             write_result = self._db_client.write_points(
                 points=metric_data,
                 time_precision='ms',
