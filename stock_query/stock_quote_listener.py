@@ -13,7 +13,8 @@ class StockQuoteListener:
     ownership over the websocket applications they create.
     """
 
-    def __init__(self, api_token: str):
+    def __init__(self, ws_server: str, api_token: str):
+        self._ws_server = ws_server
         self._api_token = api_token
         self._app: Optional[websocket.WebSocketApp] = None
         # Lock to synchronize setup/teardown of the websocket application.
@@ -121,7 +122,7 @@ class StockQuoteListener:
 
             websocket.enableTrace(True)
             self._app = websocket.WebSocketApp(
-                'wss://ws.finnhub.io?token={}'.format(self._api_token),
+                'wss://{}?token={}'.format(self._ws_url, self._api_token),
                 on_open=_on_open,
                 on_message=_on_message,
                 on_error=_on_error,

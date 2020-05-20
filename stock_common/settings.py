@@ -1,8 +1,11 @@
 import os
 
+# Where to find the stream of stock quote data.
+QUOTE_SERVER = 'ws.finnhub.io'
 API_TOKEN = 'bqlk517rh5rfdbi8pdig'
 
 CONFIG_SERVER = 'stock-config'
+CONFIG_KEY_LOG_LEVEL = 'log-level'
 
 MESSAGE_QUEUE_TYPE = os.environ.get('MESSAGE_QUEUE_TYPE')
 

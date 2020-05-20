@@ -14,11 +14,11 @@ if __name__ == "__main__":
         base_prefix='stock-query',
         bucket=config_bucket,
         reactors={
-            'log-level': LoggingReactor(),
+            settings.CONFIG_KEY_LOG_LEVEL: LoggingReactor(),
         },
     )
     with config_listener:
-        listener = StockQuoteListener(settings.API_TOKEN)
+        listener = StockQuoteListener(settings.QUOTE_SERVER, settings.API_TOKEN)
         utils.handle_termination_signal(listener)
 
         subscription_mgr = SubscriptionManager(listener, config_bucket)
