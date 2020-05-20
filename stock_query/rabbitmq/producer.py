@@ -134,7 +134,6 @@ class RmqProducer(StockQuoteProducer):
     #     )
 
     def _publish(self, quote: StockQuote) -> None:
-        logger.info('Thread (publish): {}'.format(threading.get_ident()))
         utils.retry(
             lambda: self._channel.basic_publish(
                 exchange=settings.RMQ_EXCHANGE,

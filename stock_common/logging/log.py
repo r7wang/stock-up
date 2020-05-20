@@ -10,3 +10,28 @@ formatter = logging.Formatter('[%(asctime)s] %(levelname)s %(message)s')
 console_handler.setFormatter(formatter)
 
 logger.addHandler(console_handler)
+
+
+class Logger:
+    """High-level context-sensitive logger."""
+
+    def __init__(self, name: str):
+        self._name = name
+
+    def critical(self, message: str):
+        self._log(logging.CRITICAL, message)
+
+    def debug(self, message: str):
+        self._log(logging.DEBUG, message)
+
+    def error(self, message: str):
+        self._log(logging.ERROR, message)
+
+    def info(self, message: str):
+        self._log(logging.INFO, message)
+
+    def warning(self, message: str):
+        self._log(logging.WARNING, message)
+
+    def _log(self, level: int, message: str):
+        logger.log(level, '{}: {}'.format(self._name, message))
