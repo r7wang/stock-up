@@ -5,7 +5,7 @@ import kafka
 from kafka.errors import KafkaTimeoutError, NoBrokersAvailable
 
 from stock_common import utils
-from stock_common.logging import logger
+from stock_common.logging import Logger
 from stock_common.stock_quote import StockQuote
 from stock_query.stock_quote_producer import StockQuoteProducer
 
@@ -15,18 +15,19 @@ class KafkaProducer(StockQuoteProducer):
         self._brokers = brokers
         self._topic = topic
         self._producer = None
+        self._logger = Logger(type(self).__name__)
 
     def close(self) -> None:
         """Gracefully terminate connection between the producer and the broker."""
 
-        logger.info('Flushing Kafka producer...')
+        self._logger.info('flushing & closing')
         self._producer.flush()
         self._producer.close()
 
     def connect(self) -> None:
         """Instantiate connection between the producer and the broker."""
 
-        logger.info('Connecting to Kafka broker...')
+        self._logger.info('connecting to broker')
         self._producer = utils.retry(
             lambda: kafka.KafkaProducer(
                 bootstrap_servers=self._brokers,
@@ -35,7 +36,8 @@ class KafkaProducer(StockQuoteProducer):
             None,
             num_retries=15,
             exception_type=NoBrokersAvailable,
-            error_message='Kafka broker unavailable...',
+            error_message='broker unavailable...',
+            logger=self._logger,
         )
 
     def send(self, quote: StockQuote) -> None:
@@ -46,5 +48,6 @@ class KafkaProducer(StockQuoteProducer):
             None,
             num_retries=15,
             exception_type=KafkaTimeoutError,
-            error_message='Kafka timed out...',
+            error_message='send timeout...',
+            logger=self._logger,
         )

@@ -1,4 +1,5 @@
 import logging
+from typing import Optional
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
@@ -15,7 +16,7 @@ logger.addHandler(console_handler)
 class Logger:
     """High-level context-sensitive logger."""
 
-    def __init__(self, name: str):
+    def __init__(self, name: Optional[str] = None):
         self._name = name
 
     def critical(self, message: str):
@@ -34,4 +35,7 @@ class Logger:
         self._log(logging.WARNING, message)
 
     def _log(self, level: int, message: str):
-        logger.log(level, '{}: {}'.format(self._name, message))
+        if self._name:
+            logger.log(level, '{}: {}'.format(self._name, message))
+        else:
+            logger.log(level, message)

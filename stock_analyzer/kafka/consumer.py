@@ -8,7 +8,7 @@ from kafka.errors import NoBrokersAvailable
 
 from stock_analyzer.stock_quote_listener import StockQuoteListener
 from stock_common import settings, utils
-from stock_common.logging import logger
+from stock_common.logging import Logger
 from stock_common.stock_quote import StockQuote
 
 CONSUMER_POLL_TIMEOUT_MS = 1000
@@ -21,6 +21,7 @@ class KafkaConsumer(StockQuoteListener):
         self._topic = topic
         self._consumer = None
         self._is_done = False
+        self._logger = Logger(type(self).__name__)
 
     def start(self, handler: Callable) -> None:
         """Starts listening for stock quotes if the listener has never been stopped
@@ -32,21 +33,21 @@ class KafkaConsumer(StockQuoteListener):
         self._connect()
 
         partitions = self._consumer.partitions_for_topic(settings.TOPIC)
-        logger.info('Partitions: {}'.format(', '.join(map(lambda partition: str(partition), partitions))))
+        self._logger.info('partitions: {}'.format(', '.join(map(lambda partition: str(partition), partitions))))
 
         # Assume that only one partition exists.
         topic_partition = TopicPartition(topic=settings.TOPIC, partition=0)
         begin_offsets = self._consumer.beginning_offsets([topic_partition])
         end_offsets = self._consumer.end_offsets([topic_partition])
         last_committed_offset = self._consumer.committed(topic_partition)
-        logger.info('Starting offset: {}'.format(begin_offsets[topic_partition]))
-        logger.info('Last offset: {}'.format(end_offsets[topic_partition]))
-        logger.info('Last committed offset: {}'.format(last_committed_offset))
+        self._logger.info('starting offset: {}'.format(begin_offsets[topic_partition]))
+        self._logger.info('last offset: {}'.format(end_offsets[topic_partition]))
+        self._logger.info('last committed offset: {}'.format(last_committed_offset))
 
         while not self._is_done:
             self._process_batch(topic_partition, handler)
 
-        logger.info("Closing Kafka consumer...")
+        self._logger.info("closing consumer")
         self._consumer.close(autocommit=False)
 
     def stop(self) -> None:
@@ -80,7 +81,8 @@ class KafkaConsumer(StockQuoteListener):
             None,
             num_retries=15,
             exception_type=NoBrokersAvailable,
-            error_message='No brokers available...',
+            error_message='broker unavailable...',
+            logger=self._logger,
         )
 
     def _poll_records(self, topic_partition: TopicPartition) -> (List[StockQuote], int):
@@ -109,5 +111,5 @@ class KafkaConsumer(StockQuoteListener):
             return
 
         handler(quotes)
-        logger.debug('Max offset: {}'.format(max_offset))
+        self._logger.debug('max offset: {}'.format(max_offset))
         self._commit_offsets(topic_partition, max_offset)

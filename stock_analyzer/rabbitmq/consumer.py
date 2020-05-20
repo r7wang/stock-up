@@ -8,7 +8,7 @@ from pika.spec import Basic, BasicProperties
 
 from stock_analyzer.stock_quote_listener import StockQuoteListener
 from stock_common import settings, utils
-from stock_common.logging import logger
+from stock_common.logging import Logger
 from stock_common.stock_quote import StockQuote
 
 
@@ -17,6 +17,7 @@ class RmqConsumer(StockQuoteListener):
         self._conn = None
         self._channel: Optional[BlockingChannel] = None
         self._is_done = False
+        self._logger = Logger(type(self).__name__)
 
     def start(self, handler: Callable) -> None:
         def _on_message(
@@ -42,7 +43,7 @@ class RmqConsumer(StockQuoteListener):
             self._channel.start_consuming()
 
         if self._conn and self._conn.is_open:
-            logger.info('Closing RabbitMQ connection...')
+            self._logger.info('closing connection')
             self._conn.close()
 
     def stop(self) -> None:
@@ -53,7 +54,7 @@ class RmqConsumer(StockQuoteListener):
         if self._conn and not self._conn.is_closed:
             return
 
-        logger.info('Connecting to RabbitMQ...')
+        self._logger.info('connecting')
         credentials = pika.PlainCredentials(settings.RMQ_USER, settings.RMQ_PASSWORD)
         params = pika.ConnectionParameters(
             host=settings.RMQ_HOST,
@@ -65,7 +66,8 @@ class RmqConsumer(StockQuoteListener):
             None,
             num_retries=15,
             exception_type=AMQPConnectionError,
-            error_message='RabbitMQ broker unavailable...',
+            error_message='broker unavailable...',
+            logger=self._logger,
         )
         self._channel: BlockingChannel = self._conn.channel()
 

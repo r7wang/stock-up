@@ -122,7 +122,7 @@ class StockQuoteListener:
 
             websocket.enableTrace(True)
             self._app = websocket.WebSocketApp(
-                'wss://{}?token={}'.format(self._ws_url, self._api_token),
+                'wss://{}?token={}'.format(self._ws_server, self._api_token),
                 on_open=_on_open,
                 on_message=_on_message,
                 on_error=_on_error,

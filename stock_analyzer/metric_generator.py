@@ -3,7 +3,7 @@ from typing import List, Optional, Union
 
 from stock_analyzer.time_window import TimeWindow
 from stock_common.influxdb import MetricFormatter
-from stock_common.logging import logger
+from stock_common.logging import Logger
 
 OptionalNumeric = Optional[Union[Decimal, float, int]]
 
@@ -13,6 +13,7 @@ class MetricGenerator:
 
     def __init__(self):
         self._metric_formatter = MetricFormatter()
+        self._logger = Logger(type(self).__name__)
 
     def get_metrics(self, time_window: TimeWindow, symbol: str, timestamp: int) -> List[str]:
         """Get list of formatted metrics
@@ -35,5 +36,5 @@ class MetricGenerator:
                 *format_metric('avg_price_volume', time_window.get_average_price_by_volume()),
             ]
         except KeyError as ex:
-            logger.error('Could not format unsupported metric type: {}'.format(ex))
+            self._logger.error('could not format unsupported metric type: {}'.format(ex))
             return []

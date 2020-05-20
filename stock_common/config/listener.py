@@ -1,12 +1,12 @@
 import re
-from typing import Dict, List, Optional
+from typing import List, Optional
 
 import etcd3
 from etcd3 import Etcd3Client
 from etcd3.events import Event, PutEvent, DeleteEvent
 from etcd3.watch import WatchResponse
 
-from stock_common.config import ConfigBucket, ConfigReactor
+from stock_common.config import ConfigBucket
 from stock_common.logging import Logger
 
 
@@ -16,12 +16,10 @@ class ConfigListener:
         server: str,
         base_prefix: str,
         bucket: ConfigBucket,
-        reactors: Dict[str, ConfigReactor],
     ):
         self._server = server
         self._base_prefix = base_prefix
         self._bucket = bucket
-        self._reactors = reactors
         self._client: Optional[Etcd3Client] = None
         self._watch_id = None
         self._pattern = re.compile('^{}/(.*)'.format(self._base_prefix))
@@ -90,8 +88,6 @@ class ConfigListener:
     def _update_key(self, key: bytes, val: bytes, version: int) -> None:
         """Attempts to update the key
 
-        If the update triggers a change to the underlying data, then signal the appropriate reactors.
-
         :param key: Key for the data to be updated.
         :param val: Value associated with the given key.
         :param version: Version associated with the given value.
@@ -102,5 +98,3 @@ class ConfigListener:
         modified = self._bucket.update(key=str_key, val=str_val, version=version)
         if modified:
             self._logger.info('update [key={} val={} version={}]'.format(str_key, str_val, version))
-            if str_key in self._reactors:
-                self._reactors[str_key].react(str_val)

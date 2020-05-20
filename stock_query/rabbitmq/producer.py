@@ -1,15 +1,13 @@
 import pickle
-import threading
 from collections import deque
 from typing import Optional, Deque, Dict
 
 import pika
 from pika.adapters.blocking_connection import BlockingChannel
 from pika.exceptions import AMQPConnectionError, ConnectionClosed, NackError
-from pika.frame import Method
 
 from stock_common import settings, utils
-from stock_common.logging import logger
+from stock_common.logging import Logger
 from stock_common.stock_quote import StockQuote
 from stock_query.stock_quote_producer import StockQuoteProducer
 
@@ -21,6 +19,7 @@ class RmqProducer(StockQuoteProducer):
         self._conn = None
         self._channel: Optional[BlockingChannel] = None
         self._default_message_props = pika.BasicProperties(delivery_mode=self.PERSISTENT_MESSAGE)
+        self._logger = Logger(type(self).__name__)
 
         # Storing pending and nacked deliveries in non-persistent storage does pose a risk that the service might be
         # restarted with items in both containers. Losing these items may cause permanent data loss, but we expect the
@@ -38,7 +37,7 @@ class RmqProducer(StockQuoteProducer):
         """Gracefully terminate connection between the producer and the broker."""
 
         if self._conn and self._conn.is_open:
-            logger.info('Closing RabbitMQ connection...')
+            self._logger.info('closing connection')
             self._conn.close()
 
     def connect(self) -> None:
@@ -64,7 +63,7 @@ class RmqProducer(StockQuoteProducer):
         if self._conn and not self._conn.is_closed:
             return
 
-        logger.info('Connecting to RabbitMQ...')
+        self._logger.info('connecting')
         credentials = pika.PlainCredentials(settings.RMQ_USER, settings.RMQ_PASSWORD)
         params = pika.ConnectionParameters(
             host=settings.RMQ_HOST,
@@ -76,7 +75,8 @@ class RmqProducer(StockQuoteProducer):
             None,
             num_retries=15,
             exception_type=AMQPConnectionError,
-            error_message='RabbitMQ broker unavailable...',
+            error_message='broker unavailable...',
+            logger=self._logger,
         )
         self._channel: BlockingChannel = self._conn.channel()
         self._channel.confirm_delivery()
@@ -145,7 +145,8 @@ class RmqProducer(StockQuoteProducer):
             None,
             num_retries=15,
             exception_type=NackError,
-            error_message='RabbitMQ nacked the published message...',
+            error_message='nacked the published message...',
+            logger=self._logger,
         )
         self._message_number += 1
         # self._pending_deliveries[self._message_number] = quote
@@ -156,7 +157,8 @@ class RmqProducer(StockQuoteProducer):
             lambda: self._connect(),
             num_retries=15,
             exception_type=ConnectionClosed,
-            error_message='RabbitMQ connection not open...',
+            error_message='connection not open...',
+            logger=self._logger,
         )
 
     def _reset_confirmation_tracking(self) -> None:

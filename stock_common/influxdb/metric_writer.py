@@ -4,7 +4,7 @@ import influxdb
 from influxdb.exceptions import InfluxDBClientError
 
 from stock_common import settings
-from stock_common.logging import logger
+from stock_common.logging import Logger
 
 
 class MetricWriter:
@@ -22,6 +22,7 @@ class MetricWriter:
             password=settings.INFLUXDB_PASSWORD,
             database=settings.INFLUXDB_DB_NAME,
         )
+        self._logger = Logger(type(self).__name__)
 
     def write(self, metric_data: List[str]) -> None:
         try:
@@ -31,11 +32,11 @@ class MetricWriter:
                 protocol='line',
             )
             if not write_result:
-                logger.warn('Could not write to influx')
+                self._logger.warning('could not write to influx')
         except InfluxDBClientError as ex:
             if ex.code == 400:
                 # We are expecting to catch the following scenarios:
                 #   - writing points that are older than the retention policy
-                logger.warn('Influx DB (write_points): code={}, content={}'.format(ex.code, ex.content))
+                self._logger.warning('write_points client error [code={}, content={}]'.format(ex.code, ex.content))
             else:
                 raise

@@ -2,13 +2,14 @@ import signal
 import time
 from typing import Any, Callable, Optional, Type
 
-from stock_common.logging import logger
+from stock_common.logging import Logger
 
 
-def handle_termination_signal(listener):
+def handle_termination_signal(listener, logger=Logger()):
     """Handles common signals using a standard approach to ensure that applications terminate gracefully.
 
     :param listener: Must expose a stop() function.
+    :param logger:
     """
 
     def signal_stop(sig_num: int, frame):
@@ -27,6 +28,7 @@ def retry(
     num_retries: int,
     exception_type: Type,
     error_message: str,
+    logger: Logger,
 ) -> Any:
     for i in range(num_retries + 1):
         try:
