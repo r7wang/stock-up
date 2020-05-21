@@ -8,6 +8,7 @@ from stock_query.stock_quote_writer import StockQuoteWriter
 
 
 class StockQuotePipeline:
+
     def __init__(self, writer: StockQuoteWriter):
         self._writer = writer
         self._logger = Logger(type(self).__name__)
@@ -49,13 +50,15 @@ class StockQuotePipeline:
             return []
 
         quotes = data['data']
-        return list(map(
-            # Ensure that we always maintain correct data types.
-            lambda quote: StockQuote(
-                timestamp=int(quote['t']),
-                symbol=str(quote['s']),
-                price=Decimal(quote['p']),
-                volume=int(quote['v']),
-            ),
-            quotes,
-        ))
+        return list(
+            map(
+                # Ensure that we always maintain correct data types.
+                lambda quote: StockQuote(
+                    timestamp=int(quote['t']),
+                    symbol=str(quote['s']),
+                    price=Decimal(quote['p']),
+                    volume=int(quote['v']),
+                ),
+                quotes,
+            )
+        )

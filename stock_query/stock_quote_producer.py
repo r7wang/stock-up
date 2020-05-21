@@ -2,6 +2,7 @@ from stock_common.stock_quote import StockQuote
 
 
 class StockQuoteProducer:
+
     def close(self) -> None:
         raise NotImplementedError()
 

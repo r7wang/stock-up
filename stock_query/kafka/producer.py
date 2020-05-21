@@ -11,6 +11,7 @@ from stock_query.stock_quote_producer import StockQuoteProducer
 
 
 class KafkaProducer(StockQuoteProducer):
+
     def __init__(self, brokers: List[str], topic: str):
         self._brokers = brokers
         self._topic = topic

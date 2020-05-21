@@ -4,6 +4,7 @@ from stock_common.stock_quote import StockQuote
 
 
 class DeduplicationCache:
+
     def __init__(self, max_size: int = 10):
         self._dedup_cache = deque()
         self._dedup_cache_max_size = max_size

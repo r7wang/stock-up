@@ -2,6 +2,7 @@ from decimal import Decimal
 
 
 class StockQuote:
+
     def __init__(self, timestamp: int, symbol: str, price: Decimal, volume: int):
         self.timestamp = timestamp
         self.symbol = symbol

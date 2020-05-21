@@ -4,6 +4,7 @@ from stock_common.logging.log import logger
 
 
 class LogSubscriber:
+
     @staticmethod
     def initialize(config_bucket: ConfigBucket) -> None:
         """Subscribes the logger to log level updates

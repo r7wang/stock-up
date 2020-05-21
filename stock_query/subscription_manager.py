@@ -9,6 +9,7 @@ CONFIG_KEY_SUBSCRIPTIONS = 'subscriptions'
 
 
 class SubscriptionManager:
+
     def __init__(self, listener: StockQuoteListener, bucket: ConfigBucket):
         self._listener = listener
         self._bucket = bucket

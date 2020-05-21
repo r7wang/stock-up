@@ -5,6 +5,7 @@ from stock_query.stock_quote_producer import StockQuoteProducer
 
 
 class ProducerFactory:
+
     @staticmethod
     def build() -> StockQuoteProducer:
         service_map = {

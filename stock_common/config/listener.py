@@ -11,6 +11,7 @@ from stock_common.logging import Logger
 
 
 class ConfigListener:
+
     def __init__(
         self,
         server: str,
