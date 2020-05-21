@@ -1,5 +1,5 @@
-from stock_common import logging, settings, utils
-from stock_common.config import ConfigBucket, ConfigListener
+from stock_common import settings, utils
+from stock_common.config import ConfigBucket, ConfigListener, LogSubscriber
 from stock_query.producer_factory import ProducerFactory
 from stock_query.stock_quote_listener import StockQuoteListener
 from stock_query.stock_quote_pipeline import StockQuotePipeline
@@ -13,7 +13,7 @@ if __name__ == "__main__":
         base_prefix='stock-query',
         bucket=config_bucket,
     )
-    logging.initialize(config_bucket)
+    LogSubscriber.initialize(config_bucket)
 
     with config_listener:
         listener = StockQuoteListener(settings.QUOTE_SERVER, settings.API_TOKEN)
