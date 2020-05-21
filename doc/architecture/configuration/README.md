@@ -53,13 +53,22 @@ throughput.
 
 ![Architecture](dynamic-configuration.png)
 
-Properties:
-* data size is expected to be negligible (<10 MB)
+**Interfaces**
+* _get_int_: gets the value for a key as an integer
+* _get_str_: gets the value for a key as a string
+* _update_: updates the value for a key with a version
+* _remove_: removes the value for a key
+* _subscribe_: registers a callback function that synchronously triggers when changes are made to a specific key
+* _unsubscribe_: unregisters a callback function by its subscription ID
+
+**Properties**
+* total data size is expected to be negligible (<10 MB)
 * reads are expected to happen very frequently (1000+/s)
 * writes are expected to happen sparingly (<1/s)
 
 #### Configuration Listener
-References and updates the configuration bucket as necessary.
+References and updates the configuration bucket as necessary, handling the complexity of communication with etcd and
+seeding initial configuration values correctly.
 
 #### Other Options
 The designs below started initially with the concept of a reactor pattern, where all reactors would be predefined and
