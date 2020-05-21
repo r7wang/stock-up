@@ -1,7 +1,7 @@
 import threading
 from collections import defaultdict
 from typing import Callable, Dict, Optional, Set, Tuple
-from uuid import uuid4, UUID
+from uuid import UUID, uuid4
 
 
 class ConfigBucket:

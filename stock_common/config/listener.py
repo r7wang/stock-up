@@ -3,7 +3,7 @@ from typing import List, Optional
 
 import etcd3
 from etcd3 import Etcd3Client
-from etcd3.events import Event, PutEvent, DeleteEvent
+from etcd3.events import DeleteEvent, Event, PutEvent
 from etcd3.watch import WatchResponse
 
 from stock_common.config import ConfigBucket

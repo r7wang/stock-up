@@ -1,5 +1,5 @@
 import heapq
-from collections import deque, defaultdict
+from collections import defaultdict, deque
 from decimal import Decimal
 from typing import Deque, Dict, Iterator, List, Optional
 

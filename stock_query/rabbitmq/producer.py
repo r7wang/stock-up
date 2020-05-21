@@ -1,6 +1,6 @@
 import pickle
 from collections import deque
-from typing import Optional, Deque, Dict
+from typing import Deque, Dict, Optional
 
 import pika
 from pika.adapters.blocking_connection import BlockingChannel
