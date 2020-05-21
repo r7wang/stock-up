@@ -9,6 +9,7 @@ from stock_common.stock_quote import StockQuote
 
 
 class StockQuotePipeline:
+
     def __init__(self):
         self._metric_gen = MetricGenerator()
         self._metric_writer = MetricWriter()

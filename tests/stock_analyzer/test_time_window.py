@@ -6,6 +6,7 @@ from stock_common.stock_quote import StockQuote
 
 
 class TestUpdate:
+
     def _make_quotes(self) -> List[StockQuote]:
         return [
             StockQuote(timestamp=1588368385881, symbol='AMZN', price=Decimal('2279.9'), volume=1),

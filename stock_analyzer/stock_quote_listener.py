@@ -2,6 +2,7 @@ from collections import Callable
 
 
 class StockQuoteListener:
+
     def start(self, handler: Callable) -> None:
         raise NotImplementedError()
 

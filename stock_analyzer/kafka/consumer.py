@@ -16,6 +16,7 @@ CONSUMER_POLL_MAX_RECORDS = 50
 
 
 class KafkaConsumer(StockQuoteListener):
+
     def __init__(self, brokers: List[str], topic: str):
         self._brokers = brokers
         self._topic = topic

@@ -8,6 +8,7 @@ from stock_common.stock_quote import StockQuote
 
 # TODO: Implement variance calculations.
 class TimeWindow:
+
     def __init__(self, interval: int):
         """
         :param interval: Time interval of the window, in milliseconds.

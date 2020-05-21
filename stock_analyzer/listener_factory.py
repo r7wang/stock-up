@@ -5,6 +5,7 @@ from stock_common import settings
 
 
 class ListenerFactory:
+
     @staticmethod
     def build() -> StockQuoteListener:
         service_map = {

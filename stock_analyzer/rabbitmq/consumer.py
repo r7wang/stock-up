@@ -13,6 +13,7 @@ from stock_common.stock_quote import StockQuote
 
 
 class RmqConsumer(StockQuoteListener):
+
     def __init__(self):
         self._conn = None
         self._channel: Optional[BlockingChannel] = None
@@ -20,11 +21,12 @@ class RmqConsumer(StockQuoteListener):
         self._logger = Logger(type(self).__name__)
 
     def start(self, handler: Callable) -> None:
+
         def _on_message(
-                channel: BlockingChannel,
-                method: Basic.Deliver,
-                properties: BasicProperties,
-                body: bytes,
+            channel: BlockingChannel,
+            method: Basic.Deliver,
+            properties: BasicProperties,
+            body: bytes,
         ) -> None:
             quote: StockQuote = pickle.loads(body)
             handler([quote])
