@@ -40,7 +40,7 @@ This does not provide direct HTTP access to JMX MBeans but metrics can be viewed
 requires JDK. Additional tooling is required view metrics, but the benefit is that few components are required to
 produce metrics. Overall, this is a pretty reasonable solution.
 
-### Using [telegraf](https://github.com/influxdata/telegraf)
+#### Using [telegraf](https://github.com/influxdata/telegraf)
 This option uses `telegraf`, a pretty popular server agent for collecting metrics in conjunction with `Jolokia`, an
 agent that runs alongside Kafka and exposes JMX remotely via HTTP. `Jolokia` can be integrated directly into the Kafka
 image with minimal effort.
@@ -48,3 +48,6 @@ image with minimal effort.
 A key benefit of this implementation is that metrics can be viewed directly using a browser. `telegraf` is also a very
 popular agent with support for many types of inputs and outputs. It integrates well with `InfluxDB` and together, they
 form two parts of the TICK stack. Overall, this is a pretty good solution.
+
+#### Articles
+[Confluent: Monitoring Kafka](https://docs.confluent.io/current/kafka/monitoring.html)
