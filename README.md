@@ -63,6 +63,15 @@ See the service-level documentation for details.
 [Configuring stock-query](stock_query)  
 [Configuring stock-analyzer](stock_analyzer)  
 
+## Next Steps
+* Build operational metrics for all services.
+    * Kafka brokers
+    * Usage: CPU, memory, disk, network
+    * Counts: message (produced / consumed)
+    * Performance: produce + confirmation, analysis
+* Build out exactly-once semantics for Kafka-based delivery.
+* Deploy entire project to AWS/GCP.
+
 ## Known Issues
 * The websocket occasionally closes the connection (for reasons currently unknown), requiring the connection to be
   restarted. Unfortunately, this still takes a few seconds so we lose at least a few seconds worth of data.
