@@ -21,4 +21,5 @@ http://localhost:9992/jolokia/read/kafka.server:type=BrokerTopicMetrics,name=Byt
 ```
 
 ### Articles
-[Monitoring Kafka with Jolokia](https://pushed.to/cokeSchlumpf/rethink-it/posts/misc/monitoring-kafka.md)
+[Jolokia Protocol Reference](https://jolokia.org/reference/html/protocol.html)  
+[Monitoring Kafka with Jolokia](https://pushed.to/cokeSchlumpf/rethink-it/posts/misc/monitoring-kafka.md)  
