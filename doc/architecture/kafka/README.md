@@ -42,6 +42,9 @@ produce metrics. Overall, this is a pretty reasonable solution.
 
 ### Using [telegraf](https://github.com/influxdata/telegraf)
 This option uses `telegraf`, a pretty popular server agent for collecting metrics in conjunction with `Jolokia`, an
-agent that runs alongside Kafka and exposes JMX remotely via HTTP.
+agent that runs alongside Kafka and exposes JMX remotely via HTTP. `Jolokia` can be integrated directly into the Kafka
+image with minimal effort.
 
-Implementation details TBD.
+A key benefit of this implementation is that metrics can be viewed directly using a browser. `telegraf` is also a very
+popular agent with support for many types of inputs and outputs. It integrates well with `InfluxDB` and together, they
+form two parts of the TICK stack. Overall, this is a pretty good solution.
