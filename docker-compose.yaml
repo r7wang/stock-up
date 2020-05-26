@@ -79,6 +79,12 @@ services:
       # - ZOO_ENABLE_AUTH=yes
       # - ZOO_SERVER_USERS=kafka
       # - ZOO_SERVER_PASSWORDS=kafka-password
+  telegraf:
+    image: telegraf:1.14.3
+    networks:
+      - stock-network
+    volumes:
+      - './conf/telegraf.conf:/etc/telegraf/telegraf.conf:ro'
   influxdb:
     image: bitnami/influxdb:1.8.0
     networks:

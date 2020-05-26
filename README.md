@@ -31,6 +31,7 @@ Configure `influxdb`.
 docker exec -it stock-up_influxdb_1 bash
 influx
 CREATE DATABASE "stock" WITH DURATION 7d NAME "stock_rp"
+CREATE DATABASE "kafka" WITH DURATION 7d NAME "kafka_rp"
 ```
 
 Start consuming from the Kafka topic.
