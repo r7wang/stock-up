@@ -1,6 +1,6 @@
 image:
-  repo: null
-  tag: null
+  repo: marketplace.gcr.io/google/etcd
+  tag: 3.3
 replicas: 3
 service:
   dnsBase: svc.cluster.local
@@ -8,4 +8,9 @@ service:
   port: 2379
   peerPort: 2380
 persistence:
-  storageClass: null
+  storageClass: data
+  size: 1Gi
+metrics:
+  image: marketplace.gcr.io/google/etcd/prometheus-to-sd:3.3
+  exporter:
+    enabled: true

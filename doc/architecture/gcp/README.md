@@ -25,10 +25,10 @@ values. It also allows us to keep a non-volatile record of the currently deploye
 Copying the chart facilitates any future modifications to the chart, values, or environment variables. Overall, this is
 the most attractive option.
 
-#### Setup
+#### Setup Cluster
 ```bash
-CLUSTER=etcd-cluster
-ZONE=us-east4-c
+export CLUSTER=etcd-cluster
+export ZONE=us-east4-c
 gcloud container clusters create "${CLUSTER}" \
     --zone="${ZONE}" \
     --cluster-version=1.16.8-gke.15 \
@@ -39,7 +39,15 @@ gcloud container clusters create "${CLUSTER}" \
     --enable-stackdriver-kubernetes
 ```
 
-#### Teardown
+#### Install
+```bash
+export ROOT_PASSWORD=test
+export CHART_PATH=helm/chart/etcd
+helm lint --set auth.rbac.rootPassword="${ROOT_PASSWORD}" "${CHART_PATH}"
+helm upgrade --set auth.rbac.rootPassword="${ROOT_PASSWORD}" stock-config "${CHART_PATH}"
+```
+
+#### Teardown Cluster
 ```bash
 gcloud container clusters delete "${CLUSTER}" --zone="${ZONE}"
 ```
