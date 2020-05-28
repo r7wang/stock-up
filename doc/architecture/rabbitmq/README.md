@@ -1,7 +1,8 @@
 ## Design Considerations
 
 ### Exchange / Queue Declaration
-There are multiple approaches worth considering.
+Production deployment requires certain resources to be available so that publishers and consumers can access the
+resources that they need without all having to perform independent configuration.
 
 #### Node Boot from Configuration
 [This](https://www.rabbitmq.com/definitions.html) approach uses a configuration file and the `load_definitions`
