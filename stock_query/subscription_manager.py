@@ -52,11 +52,11 @@ class SubscriptionManager:
         self._thread.join()
 
     def _parse_subscriptions(self) -> Set[str]:
-        subscriptions = self._bucket.get_str(CONFIG_KEY_SUBSCRIPTIONS)
-        if not subscriptions:
+        subs = self._bucket.get_str(CONFIG_KEY_SUBSCRIPTIONS)
+        if not subs:
             return set()
 
-        return set(subscriptions.split(','))
+        return set(subs.split(','))
 
     def _update_subscriptions(self) -> None:
         self._logger.info('watching subscriptions')
