@@ -2,15 +2,19 @@
 
 #### Google Compute Engine: Containers in VM
 This involves manually allocating VMs and specifying an individual image to be run on each VM. Deploying a container is
-documented [here](https://cloud.google.com/compute/docs/containers/deploying-containers). Multiple aspects of this
-deployment type are manual, including:
- * setting up internal IPs for service-to-service communication
- * setting up [load balancing](https://cloud.google.com/load-balancing/docs/how-to)
- * performing upgrades to the VM
- * horizontally scaling the cluster
- 
-Getting a single VM up and running is fairly easy, where high-availability and scale are not required. This option is
-being considered for building out an MVP.
+documented [here](https://cloud.google.com/compute/docs/containers/deploying-containers).
+
+Maintaining the VM is a manual process that will likely involve performing upgrades to the VM and finding ways to
+horizontally scale the application, all of which are non-trivial when working with individual VM instances.
+
+Setting up internal IPs or internal DNS for service-to-service communication is done automatically, using the name of
+the VM instance, hence no additional work is required. If running a web server, [load balancing](https://cloud.google.com/load-balancing/docs/how-to)
+may have to be set up. There are simpler options for running containerized web servers.
+
+Setting environment variables can be done by modifying `/etc/profile` on the VM instance.
+
+Overall, getting a single VM up and running is fairly easy, where high-availability and scale are not required. This
+option is being considered for building out an MVP.
 
 For reference, Bitnami has provided options for single VM deployments.
  * [etcd](https://console.cloud.google.com/marketplace/details/bitnami-launchpad/etcd)
