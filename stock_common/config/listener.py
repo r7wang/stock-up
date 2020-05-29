@@ -14,11 +14,11 @@ class ConfigListener:
 
     def __init__(
         self,
-        server: str,
+        host: str,
         base_prefix: str,
         bucket: ConfigBucket,
     ):
-        self._server = server
+        self._host = host
         self._base_prefix = base_prefix
         self._bucket = bucket
         self._client: Optional[Etcd3Client] = None
@@ -28,7 +28,7 @@ class ConfigListener:
 
     def __enter__(self):
         self._logger.info('watching key range {}/*'.format(self._base_prefix))
-        self._client = etcd3.client(host=self._server)
+        self._client = etcd3.client(host=self._host)
         self._watch_id = self._client.add_watch_prefix_callback(
             key_prefix=self._base_prefix + '/',
             callback=self._on_event,

@@ -4,13 +4,13 @@ import os
 QUOTE_SERVER = 'ws.finnhub.io'
 API_TOKEN = 'bqlk517rh5rfdbi8pdig'
 
-CONFIG_SERVER = 'stock-config'
+CONFIG_HOST = os.environ.get('CONFIG_HOST')
 CONFIG_KEY_LOG_LEVEL = 'log-level'
 
 MESSAGE_QUEUE_TYPE = os.environ.get('MESSAGE_QUEUE_TYPE')
 
-BROKERS = ['kafka:9092']
-TOPIC = 'stock-quotes'
+KAFKA_BROKERS = os.environ.get('KAFKA_BROKERS')
+KAFKA_TOPIC = os.environ.get('KAFKA_TOPIC')
 
 RMQ_HOST = 'rabbitmq'
 RMQ_VHOST = 'stocks'

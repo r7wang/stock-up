@@ -16,7 +16,10 @@ services:
     networks:
       - stock-network
     environment:
-      - MESSAGE_QUEUE_TYPE=rmq
+      - CONFIG_HOST=stock-config
+      - MESSAGE_QUEUE_TYPE=kafka
+      - KAFKA_BROKERS=kafka:9092
+      - KAFKA_TOPIC=stock-quotes
   stock-query:
     build:
       context: .
@@ -28,7 +31,10 @@ services:
     networks:
       - stock-network
     environment:
-      - MESSAGE_QUEUE_TYPE=rmq
+      - CONFIG_HOST=stock-config
+      - MESSAGE_QUEUE_TYPE=kafka
+      - KAFKA_BROKERS=kafka:9092
+      - KAFKA_TOPIC=stock-quotes
   stock-config:
     image: bitnami/etcd:3.4.7
     networks:

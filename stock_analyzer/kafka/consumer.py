@@ -7,7 +7,7 @@ from kafka import OffsetAndMetadata, TopicPartition
 from kafka.errors import NoBrokersAvailable
 
 from stock_analyzer.stock_quote_listener import StockQuoteListener
-from stock_common import settings, utils
+from stock_common import utils
 from stock_common.logging import Logger
 from stock_common.stock_quote import StockQuote
 
@@ -33,11 +33,11 @@ class KafkaConsumer(StockQuoteListener):
         """
         self._connect()
 
-        partitions = self._consumer.partitions_for_topic(settings.TOPIC)
+        partitions = self._consumer.partitions_for_topic(self._topic)
         self._logger.info('partitions: {}'.format(', '.join(map(lambda partition: str(partition), partitions))))
 
         # Assume that only one partition exists.
-        topic_partition = TopicPartition(topic=settings.TOPIC, partition=0)
+        topic_partition = TopicPartition(topic=self._topic, partition=0)
         begin_offsets = self._consumer.beginning_offsets([topic_partition])
         end_offsets = self._consumer.end_offsets([topic_partition])
         last_committed_offset = self._consumer.committed(topic_partition)

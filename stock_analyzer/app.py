@@ -6,7 +6,7 @@ from stock_common.config import ConfigBucket, ConfigListener, LogSubscriber
 if __name__ == "__main__":
     config_bucket = ConfigBucket()
     config_listener = ConfigListener(
-        server=settings.CONFIG_SERVER,
+        host=settings.CONFIG_HOST,
         base_prefix='stock-analyzer',
         bucket=config_bucket,
     )

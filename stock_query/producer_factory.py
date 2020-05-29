@@ -9,7 +9,7 @@ class ProducerFactory:
     @staticmethod
     def build() -> StockQuoteProducer:
         service_map = {
-            'kafka': lambda: KafkaProducer(settings.BROKERS, settings.TOPIC),
+            'kafka': lambda: KafkaProducer(settings.KAFKA_BROKERS.split(','), settings.KAFKA_TOPIC),
             'rmq': lambda: RmqProducer(),
         }
         return service_map[settings.MESSAGE_QUEUE_TYPE]()

@@ -9,7 +9,7 @@ from stock_query.subscription_manager import SubscriptionManager
 if __name__ == "__main__":
     config_bucket = ConfigBucket()
     config_listener = ConfigListener(
-        server=settings.CONFIG_SERVER,
+        host=settings.CONFIG_HOST,
         base_prefix='stock-query',
         bucket=config_bucket,
     )

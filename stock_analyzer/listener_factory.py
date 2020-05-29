@@ -9,7 +9,7 @@ class ListenerFactory:
     @staticmethod
     def build() -> StockQuoteListener:
         service_map = {
-            'kafka': lambda: KafkaConsumer(settings.BROKERS, settings.TOPIC),
+            'kafka': lambda: KafkaConsumer(settings.KAFKA_BROKERS.split(','), settings.KAFKA_TOPIC),
             'rmq': lambda: RmqConsumer(),
         }
         return service_map[settings.MESSAGE_QUEUE_TYPE]()
