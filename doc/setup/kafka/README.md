@@ -4,6 +4,11 @@ Kafka.
 
 Set the `MESSAGE_QUEUE_TYPE` environment variable for `stock-analyzer` and `stock-query` to `kafka`.
 
+Zookeeper is a Kafka dependency and needs to be available.
+```bash
+docker-compose up -d zookeeper
+```
+
 Turn on service.
 ```bash
 docker-compose up -d kafka

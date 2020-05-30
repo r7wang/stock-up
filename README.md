@@ -7,22 +7,13 @@ Running the associated services will produce metrics and visualize them in Grafa
 ![Metrics](./doc/images/metrics.png)
 
 ## Setup
-Turn on service dependencies.
-```bash
-docker-compose up -d zookeeper kafka influxdb grafana
-```
-
-Configure one of the following message queues.
+Setup one of the following message queues.
  * [Kafka](doc/setup/kafka)
  * [RabbitMQ](doc/setup/rabbitmq)
 
-Configure `influxdb`.
-```bash
-docker exec -it stock-up_influxdb_1 bash
-influx
-CREATE DATABASE "stock" WITH DURATION 7d NAME "stock_rp"
-CREATE DATABASE "kafka" WITH DURATION 7d NAME "kafka_rp"
-```
+Setup [influxdb](doc/setup/influxdb).
+
+Setup [grafana](doc/setup/grafana).
 
 Start consuming stock quotes.
 ```bash
@@ -34,13 +25,12 @@ Start generating stock quotes.
 docker-compose up -d stock-query
 ```
 
-## Architecture
-Detailed documentation can be found [here](doc/architecture).
+Use dynamic configuration to define desired behavior.
+ * [stock-query](stock_query)
+ * [stock-analyzer](stock_analyzer)
 
-## Configuration
-See the service-level documentation for details.  
-[Configuring stock-query](stock_query)  
-[Configuring stock-analyzer](stock_analyzer)  
+## Architecture
+Detailed documentation can be found [here](doc/architecture).  
 
 ## Next Steps
 * Build operational metrics for all services.
