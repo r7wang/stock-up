@@ -11,15 +11,22 @@ services:
       dockerfile: stock_analyzer/Dockerfile
     depends_on:
       - kafka
+      - influxdb
       - stock-config
     image: stock-analyzer:0.1
     networks:
       - stock-network
+    env_file:
+      - .secrets
     environment:
       - CONFIG_HOST=stock-config
       - MESSAGE_QUEUE_TYPE=kafka
       - KAFKA_BROKERS=kafka:9092
       - KAFKA_TOPIC=stock-quotes
+      - INFLUXDB_HOST=influxdb
+      - INFLUXDB_PORT=8086
+      - INFLUXDB_USER=admin
+      - INFLUXDB_DB_NAME=stock
   stock-query:
     build:
       context: .
@@ -30,11 +37,14 @@ services:
     image: stock-query:0.1
     networks:
       - stock-network
+    env_file:
+      - .secrets
     environment:
       - CONFIG_HOST=stock-config
       - MESSAGE_QUEUE_TYPE=kafka
       - KAFKA_BROKERS=kafka:9092
       - KAFKA_TOPIC=stock-quotes
+      - QUOTE_SERVER=ws.finnhub.io
   stock-config:
     image: bitnami/etcd:3.4.7
     networks:
@@ -101,13 +111,11 @@ services:
       - INFLUXDB_HTTP_AUTH_ENABLED=false
       - INFLUXDB_ADMIN_USER_PASSWORD=influxdb-password
       # - INFLUXDB_DB=stock
-      # - INFLUXDB_USER=appuser
-      # - INFLUXDB_USER_PASSWORD=influxdb-password
   grafana:
     image: bitnami/grafana:6.7.3
     networks:
       - stock-network
     ports:
-      - '9997:3000'
+      - '3000:3000'
     volumes:
       - '.grafana_data:/opt/bitnami/grafana/data'

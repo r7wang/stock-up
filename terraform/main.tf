@@ -30,6 +30,26 @@ module "stock-analyzer" {
     {
       name  = "KAFKA_TOPIC"
       value = "stock-quotes"
+    },
+    {
+      name  = "INFLUXDB_HOST"
+      value = "stock-influxdb"
+    },
+    {
+      name  = "INFLUXDB_PORT"
+      value = "8086"
+    },
+    {
+      name  = "INFLUXDB_USER"
+      value = "admin"
+    },
+    {
+      name  = "INFLUXDB_PASSWORD"
+      value = var.influxdb_password
+    },
+    {
+      name  = "INFLUXDB_DB_NAME"
+      value = "stock"
     }
   ]
 }
@@ -56,6 +76,14 @@ module "stock-query" {
     {
       name  = "KAFKA_TOPIC"
       value = "stock-quotes"
+    },
+    {
+      name  = "QUOTE_SERVER"
+      value = "ws.finnhub.io"
+    },
+    {
+      name  = "QUOTE_API_TOKEN"
+      value = var.quote_api_token
     }
   ]
 }

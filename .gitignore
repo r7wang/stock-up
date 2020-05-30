@@ -8,6 +8,9 @@ __pycache__
 .python-version
 .rabbitmq_data
 
+# Secrets
+.secrets
+
 # Terraform
 *.tfstate*
 *.tfvars

@@ -2,6 +2,10 @@ variable "project" {}
 
 variable "credentials_file" {}
 
+variable "quote_api_token" {}
+
+variable "influxdb_password" {}
+
 variable "region" {
   default = "us-east4"
 }

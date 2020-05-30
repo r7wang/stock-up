@@ -88,12 +88,13 @@ See the service-level documentation for details.
     * Usage: CPU, memory, disk, network
     * Counts: message (produced / consumed)
     * Performance: produce + confirmation, analysis
+* Figure out how to work with etcd authentication.
+* Make applications resilient to broken etcd connection.
 * Build out exactly-once semantics for Kafka-based delivery.
 * Deploy entire project to AWS/GCP.
-    * Figure out how to work with etcd authentication.
+    * Expose external IP on Grafana to view metrics.
 * Consider the role of [Redis](https://scalegrid.io/blog/top-redis-use-cases-by-core-data-structure-types/) in
   persisting state of stock analyzer between crashes.
-* Consider the role of serverless deployment.
 * Consider integrating with [pub/sub](https://cloud.google.com/blog/products/data-analytics/what-to-consider-in-an-apache-kafka-to-pubsub-migration)
   as another message queueing option.
 

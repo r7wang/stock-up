@@ -17,7 +17,7 @@ if __name__ == "__main__":
     LogSubscriber.initialize(config_bucket)
 
     with config_listener:
-        listener = StockQuoteListener(settings.QUOTE_SERVER, settings.API_TOKEN)
+        listener = StockQuoteListener(settings.QUOTE_SERVER, settings.QUOTE_API_TOKEN)
         utils.handle_termination_signal(listener)
 
         subscription_mgr = SubscriptionManager(listener, config_bucket)
