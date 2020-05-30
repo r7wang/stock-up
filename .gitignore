@@ -7,4 +7,11 @@ __pycache__
 .kafka
 .python-version
 .rabbitmq_data
+
+# Terraform
+*.tfstate*
+*.tfvars
+.terraform
+credentials.json
+
 .zookeeper
