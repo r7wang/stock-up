@@ -9,8 +9,8 @@ provider "google" {
 }
 
 module "stock-analyzer" {
-  vm_depends_on = [module.stock-config, module.stock-kafka]
-  source  = "./gce-container"
+  vm_depends_on = [module.stock-config, module.stock-kafka, module.stock-influxdb]
+  source        = "./gce-container"
 
   name  = "stock-analyzer"
   image = "gcr.io/${var.project}/stock-analyzer:0.1"
@@ -28,7 +28,7 @@ module "stock-analyzer" {
       value = "stock-kafka:9092"
     },
     {
-      name = "KAFKA_TOPIC"
+      name  = "KAFKA_TOPIC"
       value = "stock-quotes"
     }
   ]
@@ -36,9 +36,9 @@ module "stock-analyzer" {
 
 module "stock-query" {
   vm_depends_on = [module.stock-config, module.stock-kafka]
-  source  = "./gce-container"
+  source        = "./gce-container"
 
-  name = "stock-query"
+  name  = "stock-query"
   image = "gcr.io/${var.project}/stock-query:0.1"
   env = [
     {
@@ -54,16 +54,16 @@ module "stock-query" {
       value = "stock-kafka:9092"
     },
     {
-      name = "KAFKA_TOPIC"
+      name  = "KAFKA_TOPIC"
       value = "stock-quotes"
     }
   ]
 }
 
 module "stock-config" {
-  source  = "./gce-container"
+  source = "./gce-container"
 
-  name = "stock-config"
+  name  = "stock-config"
   image = "gcr.io/${var.project}/etcd/3.4.7"
   env = [
     {
@@ -75,46 +75,70 @@ module "stock-config" {
 
 module "stock-kafka" {
   vm_depends_on = [module.stock-zookeeper]
-  source  = "./gce-container"
+  source        = "./gce-container"
 
-  name = "stock-kafka"
+  name  = "stock-kafka"
   image = "gcr.io/${var.project}/kafka:2.5.0"
   env = [
     {
-      name = "KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE"
+      name  = "KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE"
       value = "true"
     },
     {
-      name = "KAFKA_CFG_ZOOKEEPER_CONNECT"
+      name  = "KAFKA_CFG_ZOOKEEPER_CONNECT"
       value = "stock-zookeeper:2181"
     },
     {
-      name = "ALLOW_PLAINTEXT_LISTENER"
+      name  = "ALLOW_PLAINTEXT_LISTENER"
       value = "yes"
     },
     {
-      name = "KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP"
+      name  = "KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP"
       value = "PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT"
     },
     {
-      name = "KAFKA_CFG_LISTENERS"
+      name  = "KAFKA_CFG_LISTENERS"
       value = "PLAINTEXT://:9092,PLAINTEXT_HOST://:29092"
     },
     {
-      name = "KAFKA_CFG_ADVERTISED_LISTENERS"
+      name  = "KAFKA_CFG_ADVERTISED_LISTENERS"
       value = "PLAINTEXT://stock-kafka:9092,PLAINTEXT_HOST://localhost:29092"
     }
   ]
 }
 
-module "stock-zookeeper" {
-  source  = "./gce-container"
+module "stock-grafana" {
+  source = "./gce-container"
 
-  name = "stock-zookeeper"
+  name  = "stock-grafana"
+  image = "gcr.io/${var.project}/grafana/6.7.3"
+}
+
+module "stock-influxdb" {
+  source = "./gce-container"
+
+  name  = "stock-influxdb"
+  image = "gcr.io/${var.project}/influxdb/1.8.0"
+  env = [
+    {
+      name  = "INFLUXDB_HTTP_AUTH_ENABLED"
+      value = "false"
+    },
+    {
+      name  = "INFLUXDB_ADMIN_USER_PASSWORD"
+      value = "influxdb-password"
+    }
+  ]
+}
+
+module "stock-zookeeper" {
+  source = "./gce-container"
+
+  name  = "stock-zookeeper"
   image = "gcr.io/${var.project}/zookeeper/3.6.1"
   env = [
     {
-      name = "ALLOW_ANONYMOUS_LOGIN"
+      name  = "ALLOW_ANONYMOUS_LOGIN"
       value = "yes"
     }
   ]
