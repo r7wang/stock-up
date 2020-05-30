@@ -1,5 +1,5 @@
 from stock_common import settings, utils
-from stock_common.config import ConfigBucket, ConfigListener, LogSubscriber
+from stock_common.config import ConfigBucket, ConfigListener, LogSubscriber, log_config
 from stock_query.producer_factory import ProducerFactory
 from stock_query.stock_quote_listener import StockQuoteListener
 from stock_query.stock_quote_pipeline import StockQuotePipeline
@@ -7,6 +7,7 @@ from stock_query.stock_quote_writer import StockQuoteWriter
 from stock_query.subscription_manager import SubscriptionManager
 
 if __name__ == "__main__":
+    log_config(settings)
     config_bucket = ConfigBucket()
     config_listener = ConfigListener(
         host=settings.CONFIG_HOST,
