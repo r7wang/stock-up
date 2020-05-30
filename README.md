@@ -47,6 +47,22 @@ docker-compose up -d stock-query
 ## Setup rabbitmq
 `rabbitmq` can be used as an alternative to `kafka`, for the types of message queueing that this application is using.
 
+Add this section to `docker-compose.yaml`.
+```bash
+  rabbitmq:
+    image: bitnami/rabbitmq:3.8.3
+    networks:
+      - stock-network
+    volumes:
+      - '.rabbitmq_data:/bitnami'
+    environment:
+      - RABBITMQ_USERNAME=rmq
+      - RABBITMQ_PASSWORD=rmq-password
+      - RABBITMQ_VHOST=stocks
+```
+
+Set the `MESSAGE_QUEUE_TYPE` environment variable for `stock-analyzer` and `stock-query` to `rmq`.
+
 Turn on service.
 ```bash
 docker-compose up -d rabbitmq

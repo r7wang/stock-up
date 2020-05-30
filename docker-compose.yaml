@@ -111,13 +111,3 @@ services:
       - '9997:3000'
     volumes:
       - '.grafana_data:/opt/bitnami/grafana/data'
-  rabbitmq:
-    image: bitnami/rabbitmq:3.8.3
-    networks:
-      - stock-network
-    volumes:
-      - '.rabbitmq_data:/bitnami'
-    environment:
-      - RABBITMQ_USERNAME=rmq
-      - RABBITMQ_PASSWORD=rmq-password
-      - RABBITMQ_VHOST=stocks
