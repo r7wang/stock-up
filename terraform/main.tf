@@ -60,6 +60,7 @@ module "stock-query" {
 
   name  = "stock-query"
   image = "gcr.io/${var.project}/stock-query:0.1"
+  disk_size = 15
   env = [
     {
       name  = "CONFIG_HOST"
@@ -92,7 +93,7 @@ module "stock-config" {
   source = "./gce-container"
 
   name  = "stock-config"
-  image = "gcr.io/${var.project}/etcd/3.4.7"
+  image = "gcr.io/${var.project}/etcd:3.4.7"
   env = [
     {
       name = "ALLOW_NONE_AUTHENTICATION"
@@ -139,7 +140,7 @@ module "stock-grafana" {
   source = "./gce-container"
 
   name  = "stock-grafana"
-  image = "gcr.io/${var.project}/grafana/6.7.3"
+  image = "gcr.io/${var.project}/grafana:6.7.3"
 }
 
 module "stock-influxdb" {
@@ -163,7 +164,7 @@ module "stock-zookeeper" {
   source = "./gce-container"
 
   name  = "stock-zookeeper"
-  image = "gcr.io/${var.project}/zookeeper/3.6.1"
+  image = "gcr.io/${var.project}/zookeeper:3.6.1"
   env = [
     {
       name  = "ALLOW_ANONYMOUS_LOGIN"

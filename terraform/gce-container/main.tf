@@ -21,6 +21,7 @@ resource "google_compute_instance" "vm_instance" {
   boot_disk {
     initialize_params {
       image = module.container-vm.source_image
+      size  = var.disk_size
     }
   }
 

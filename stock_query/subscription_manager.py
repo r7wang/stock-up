@@ -62,8 +62,9 @@ class SubscriptionManager:
         self._logger.info('watching subscriptions')
         subscription_id = self._bucket.subscribe(CONFIG_KEY_SUBSCRIPTIONS, self.notify_change)
 
-        current_subs = set()
+        self._current_subs = set()
         while True:
+            self._logger.info('waiting on notify signal')
             self._notify_signal.acquire()
 
             # Check for completion before making any subscription changes. This prevents exceptions caused by
@@ -72,11 +73,11 @@ class SubscriptionManager:
                 break
 
             requested_subs = self._parse_subscriptions()
-            to_add = requested_subs.difference(current_subs)
-            to_remove = current_subs.difference(requested_subs)
+            to_add = requested_subs.difference(self._current_subs)
+            to_remove = self._current_subs.difference(requested_subs)
             self._listener.modify_subscriptions(to_add, to_remove)
 
-            current_subs = requested_subs
+            self._current_subs = requested_subs
 
         self._logger.info('unwatching subscriptions')
         self._bucket.unsubscribe(subscription_id)
