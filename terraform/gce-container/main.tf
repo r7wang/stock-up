@@ -15,6 +15,7 @@ resource "google_compute_instance" "vm_instance" {
 
   name         = var.name
   machine_type = "n1-standard-1"
+  tags         = var.tags
 
   allow_stopping_for_update = "true"
 
@@ -28,6 +29,7 @@ resource "google_compute_instance" "vm_instance" {
   network_interface {
     network = "default"
     access_config {
+      nat_ip = var.address
     }
   }
 
