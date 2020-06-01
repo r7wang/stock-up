@@ -12,6 +12,7 @@ Projects of this scope have a lot of documented trade-offs to consider.
 | Topics                         | Description                      |
 | ------------------------------ | -------------------------------- |
 | [Configuration](configuration) | Static and dynamic configuration |
+| [Secrets](secrets)             | Handling sensitive configuration |
 
 ### Technology
 | Topics               | Description                    |

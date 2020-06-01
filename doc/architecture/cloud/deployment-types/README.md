@@ -1,26 +1,44 @@
 ## Deployment Types
 
-#### Google Compute Engine: Containers in VM
-This involves manually allocating VMs and specifying an individual image to be run on each VM. Deploying a container is
-documented [here](https://cloud.google.com/compute/docs/containers/deploying-containers).
+### Google Compute Engine: Containers in Unmanaged VMs
+This involves manually allocating VM instances and specifying an individual image to be run on each instance. Deploying
+a container is documented [here](https://cloud.google.com/compute/docs/containers/deploying-containers). Setting
+environment variables can be done by modifying `/etc/profile` on the instance, then restarting it.
 
-Maintaining the VM is a manual process that will likely involve performing upgrades to the VM and finding ways to
-horizontally scale the application, all of which are non-trivial when working with individual VM instances.
+#### Advantages
+ * The workflow for provisioning containers on VM instances is clearly defined.
+ * Internal IPs and DNS (using the instance name) are automatically configured for service-to-service communication
+   within the same network.
+ * Exposing an instance to the internet through an external IP and firewall policies is very straightforward. 
 
-Setting up internal IPs or internal DNS for service-to-service communication is done automatically, using the name of
-the VM instance, hence no additional work is required. If running a web server, [load balancing](https://cloud.google.com/load-balancing/docs/how-to)
-may have to be set up. There are simpler options for running containerized web servers.
+#### Disadvantages
+ * Unless manually instrumenting container operations, every container must be run on a separate instance. This can
+   lead to waste of server resources because the instance has to be provisioned against peak load.
+ * Setting up a cluster of services requires careful _manual_ configuration.
+ * It can be difficult to ensure correctness of the currently provisioned devices without using declarative tools.
+ * Workflow relies on startup scripts to configure an instance correctly. This adds additional complexity because
+   containerized deployment has multiple startup phases, one for the instance and one for the container.
+ * Setting up TLS termination using an HTTPS load balancer is non-trivial; requires building multiple GCP resources.
+ * Stackdriver logging is very noisy, making it difficult to find relevant logs.
 
-Setting environment variables can be done by modifying `/etc/profile` on the VM instance.
+#### Notes
+ * Container images must be versioned incrementally to ensure that VMs automatically pick up the latest images. 
+ * There are easier ways of setting up web applications and the hosting environment around those applications. Both
+   `App Engine` and `Cloud Run` provide higher level abstractions.
 
-Overall, getting a single VM up and running is fairly easy, where high-availability and scale are not required. This
-option is being considered for building out an MVP.
+#### Assessment
+This option allows us to get services up and running with less effort in exchange for sacrificing high-availability and
+scale, which is very attractive for building out a minimum viable product.
 
-For reference, Bitnami has provided options for single VM deployments.
+#### References
+GCP has relevant documentation on some of the concepts below.
+ * [Load balancing](https://cloud.google.com/load-balancing/docs/how-to)
+
+Bitnami has provided options for single VM deployments without the use of containers.
  * [etcd](https://console.cloud.google.com/marketplace/details/bitnami-launchpad/etcd)
  * [kafka](https://console.cloud.google.com/marketplace/details/bitnami-launchpad/kafka)
 
-#### Google Kubernetes Engine: Single Cluster with Node Pools
+### Google Kubernetes Engine: Single Cluster with Node Pools
 This involves creating a cluster and assigning applications to run on specific node pools. Applications are able to
 communicate with each other directly at either the `Pod` or the `Service` level, through DNS-based [service discovery](https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/).
 `Pod` communication tends to be used when dealing with cluster configuration for a distributed application, potentially
@@ -33,12 +51,12 @@ within the same VPC. It also has the advantage of reducing the cluster managemen
 cluster. There may be disadvantages in terms of cluster isolation, but this requires further investigation. This option
 currently seems to be the most viable.
 
-#### Google Kubernetes Engine: Multiple Clusters
+### Google Kubernetes Engine: Multiple Clusters
 This involves creating a cluster for each application, which shares a lot of similarities with using a single cluster.
 While there is more work to set up cluster-to-cluster networking, there is no need to manage multiple node pools and
 which applications can be deployed across those node pools. 
 
-#### Fully Managed
+### Fully Managed
 This is not applicable to all applications and is likely to vary in terms of feature set and pricing.
 
 For reference, Confluent offers fully-managed solutions for [Kafka](https://console.cloud.google.com/marketplace/product/endpoints/payg-prod.gcpmarketplace.confluent.cloud).
