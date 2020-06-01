@@ -6,6 +6,7 @@ Projects of this scope have a lot of documented trade-offs to consider.
 | ------------------------------------------------------ | ---------------------------------------------- |
 | [Platforms](cloud/platforms)                           | Cloud platform vendors                         |
 | [Deployment Types](cloud/deployment-types)             | Cloud product offerings and cluster networking |
+| [Deployment Automation](cloud/deployment-automation)   | Deployment automation approaches               |
 | [Application Resourcing](cloud/application-resourcing) | Cluster sizing and machine types               |
 
 ### Concepts
