@@ -3,7 +3,7 @@ module "stock-grafana" {
 
   name  = "stock-grafana"
   image = "gcr.io/${var.project}/grafana:6.7.3"
-  tags  = ["grafana", "allow-health_check"]
+  tags  = ["grafana", "allow-health-check"]
 
   env = [
     {
@@ -11,4 +11,16 @@ module "stock-grafana" {
       value = var.grafana_password
     }
   ]
+}
+
+resource "google_compute_instance_group" "grafana" {
+  name = "ig-grafana"
+  zone = "us-east4-c"
+
+  instances = [module.stock-grafana.vm_instance.self_link]
+
+  named_port {
+    name = "grafana"
+    port = "3000"
+  }
 }
