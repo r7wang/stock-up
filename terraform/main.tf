@@ -58,9 +58,10 @@ module "stock-query" {
   vm_depends_on = [module.stock-config, module.stock-kafka]
   source        = "./gce-container"
 
-  name  = "stock-query"
-  image = "gcr.io/${var.project}/stock-query:0.1"
+  name      = "stock-query"
+  image     = "gcr.io/${var.project}/stock-query:0.1"
   disk_size = 15
+
   env = [
     {
       name  = "CONFIG_HOST"
@@ -140,7 +141,7 @@ module "stock-influxdb" {
   source = "./gce-container"
 
   name  = "stock-influxdb"
-  image = "gcr.io/${var.project}/influxdb/1.8.0"
+  image = "gcr.io/${var.project}/influxdb:1.8.0"
   env = [
     {
       name  = "INFLUXDB_HTTP_AUTH_ENABLED"
