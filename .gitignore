@@ -9,7 +9,7 @@ __pycache__
 .rabbitmq_data
 
 # Secrets
-.secrets
+.secrets*
 
 # Terraform
 *.tfstate*

@@ -136,21 +136,6 @@ module "stock-kafka" {
   ]
 }
 
-module "stock-grafana" {
-  source = "./gce-container"
-
-  name    = "stock-grafana"
-  image   = "gcr.io/${var.project}/grafana:6.7.3"
-  tags    = ["grafana"]
-  address = google_compute_address.grafana.address
-}
-
-resource "google_compute_address" "grafana" {
-  name         = "stock-grafana-address"
-  address_type = "EXTERNAL"
-}
-
-
 module "stock-influxdb" {
   source = "./gce-container"
 
@@ -163,7 +148,7 @@ module "stock-influxdb" {
     },
     {
       name  = "INFLUXDB_ADMIN_USER_PASSWORD"
-      value = "influxdb-password"
+      value = var.influxdb_password
     }
   ]
 }

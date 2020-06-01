@@ -119,3 +119,5 @@ services:
       - '3000:3000'
     volumes:
       - '.grafana_data:/opt/bitnami/grafana/data'
+    env_file:
+      - .secrets-grafana
