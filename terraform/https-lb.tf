@@ -1,3 +1,32 @@
+resource "google_compute_global_forwarding_rule" "grafana" {
+  name = "gfr-grafana"
+
+  target     = google_compute_target_https_proxy.grafana.id
+  ip_address = google_compute_global_address.grafana.address
+  port_range = "443"
+  depends_on = [google_compute_global_address.grafana]
+}
+
+resource "google_compute_global_address" "grafana" {
+  name = "external-address-grafana"
+
+  address_type = "EXTERNAL"
+  ip_version   = "IPV4"
+}
+
+resource "google_compute_target_https_proxy" "grafana" {
+  name = "target-https-grafana"
+
+  url_map          = google_compute_url_map.grafana.id
+  ssl_certificates = [google_compute_ssl_certificate.default.id]
+}
+
+resource "google_compute_url_map" "grafana" {
+  name = "urlmap-grafana"
+
+  default_service = google_compute_backend_service.grafana.id
+}
+
 resource "google_compute_backend_service" "grafana" {
   name = "backend-grafana"
 
@@ -21,6 +50,6 @@ resource "google_compute_health_check" "grafana" {
 
   http_health_check {
     port         = 3000
-    request_path = "/"
+    request_path = "/api/health"
   }
 }
