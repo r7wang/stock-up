@@ -4,7 +4,7 @@ module "stock-grafana" {
   name      = "stock-grafana"
   image     = "gcr.io/${var.project}/grafana:6.7.3"
   disk_size = 15
-  tags      = ["grafana", "allow-health-check"]
+  tags      = ["allow-health-check"]
 
   env = [
     {

@@ -53,3 +53,17 @@ resource "google_compute_health_check" "grafana" {
     request_path = "/api/health"
   }
 }
+
+resource "google_compute_firewall" "allow_health_check" {
+  name        = "allow-health-check"
+  description = "Allow health check from load balancer IP ranges"
+
+  network       = google_compute_network.stock_network.id
+  source_ranges = ["130.211.0.0/22", "35.191.0.0/16"]
+  target_tags   = ["allow-health-check"]
+
+  allow {
+    protocol = "tcp"
+    ports    = ["80", "3000"]
+  }
+}

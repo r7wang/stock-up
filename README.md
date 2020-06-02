@@ -44,7 +44,7 @@ Detailed documentation can be found [here](doc/architecture).
   persisting state of stock analyzer between crashes.
 * Consider integrating with [pub/sub](https://cloud.google.com/blog/products/data-analytics/what-to-consider-in-an-apache-kafka-to-pubsub-migration)
   as another message queueing option.
-* Add documentation on configuring Terraform.
+* Add requirements to using this repository.
 
 ## Known Issues
 * The websocket occasionally closes the connection (for reasons currently unknown), requiring the connection to be

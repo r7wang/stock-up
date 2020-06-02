@@ -5,6 +5,11 @@ variable "vm_depends_on" {
 
 variable "name" {}
 
+variable "machine_type" {
+  type    = string
+  default = "n1-standard-1"
+}
+
 variable "tags" {
   type    = list(string)
   default = null
@@ -15,6 +20,11 @@ variable "image" {}
 variable "disk_size" {
   type    = number
   default = 10
+}
+
+variable "network" {
+  type    = string
+  default = "stock-network"
 }
 
 variable "address" {
