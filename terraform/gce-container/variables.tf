@@ -27,6 +27,11 @@ variable "network" {
   default = "stock-network"
 }
 
+variable "subnetwork" {
+  type    = string
+  default = "default-us-east4"
+}
+
 variable "address" {
   type    = string
   default = null

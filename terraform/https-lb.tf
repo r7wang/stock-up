@@ -31,7 +31,7 @@ resource "google_compute_backend_service" "grafana" {
   name = "backend-grafana"
 
   backend {
-    group = google_compute_instance_group.grafana.self_link
+    group = google_compute_instance_group.grafana.id
   }
 
   protocol  = "HTTP"

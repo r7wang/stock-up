@@ -16,12 +16,17 @@ module "stock-grafana" {
 
 resource "google_compute_instance_group" "grafana" {
   name = "ig-grafana"
-  zone = "us-east4-c"
 
+  network = google_compute_network.stock_network.id
+  zone    = "us-east4-c"
   instances = [module.stock-grafana.vm_instance.self_link]
 
   named_port {
     name = "grafana"
     port = "3000"
+  }
+
+  lifecycle {
+    create_before_destroy = true
   }
 }
