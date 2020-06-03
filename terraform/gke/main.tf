@@ -38,6 +38,11 @@ resource "kubernetes_stateful_set" "etcd" {
       }
 
       spec {
+        security_context {
+          run_as_user     = 1001
+          fs_group        = 1001
+        }
+
         container {
           name              = "${local.release}-container"
           image             = "gcr.io/${var.project}/etcd:3.4.7"
@@ -48,6 +53,11 @@ resource "kubernetes_stateful_set" "etcd" {
               cpu    = "500m"
               memory = "1Gi"
             }
+          }
+
+          volume_mount {
+            name       = "${local.release}-volumeclaim-data"
+            mount_path = "/bitnami/etcd"
           }
 
           env {
@@ -96,9 +106,11 @@ resource "kubernetes_stateful_set" "etcd" {
         namespace = kubernetes_namespace.prod.metadata[0].name
         labels    = local.labels
       }
+
       spec {
         access_modes       = ["ReadWriteOnce"]
         storage_class_name = kubernetes_storage_class.etcd.metadata[0].name
+
         resources {
           requests = {
             storage = "1Gi"
