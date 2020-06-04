@@ -17,6 +17,13 @@ module "stock_grafana" {
     },
   ]
 
+  http_probes = [
+    {
+      path      = "/api/health"
+      port_name = "client"
+    }
+  ]
+
   env = [
     {
       name  = "GF_SECURITY_ADMIN_PASSWORD"

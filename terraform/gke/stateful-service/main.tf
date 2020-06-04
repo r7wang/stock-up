@@ -70,26 +70,62 @@ resource "kubernetes_stateful_set" "default" {
             }
           }
 
-          liveness_probe {
-            tcp_socket {
-              port = "client"
+          dynamic "liveness_probe" {
+            for_each = var.tcp_probes
+            content {
+              tcp_socket {
+                port = liveness_probe.value.port_name
+              }
+              initial_delay_seconds = 10
+              period_seconds = 10
+              timeout_seconds = 5
+              success_threshold = 1
+              failure_threshold = 2
             }
-            initial_delay_seconds = 10
-            period_seconds = 10
-            timeout_seconds = 5
-            success_threshold = 1
-            failure_threshold = 2
           }
 
-          readiness_probe {
-            tcp_socket {
-              port = "client"
+          dynamic "liveness_probe" {
+            for_each = var.http_probes
+            content {
+              http_get {
+                path = liveness_probe.value.path
+                port = liveness_probe.value.port_name
+              }
+              initial_delay_seconds = 10
+              period_seconds = 10
+              timeout_seconds = 5
+              success_threshold = 1
+              failure_threshold = 2
             }
-            initial_delay_seconds = 15
-            period_seconds = 10
-            timeout_seconds = 5
-            success_threshold = 1
-            failure_threshold = 6
+          }
+
+          dynamic "readiness_probe" {
+            for_each = var.tcp_probes
+            content {
+              tcp_socket {
+                port = readiness_probe.value.port_name
+              }
+              initial_delay_seconds = 15
+              period_seconds = 10
+              timeout_seconds = 5
+              success_threshold = 1
+              failure_threshold = 6
+            }
+          }
+
+          dynamic "readiness_probe" {
+            for_each = var.http_probes
+            content {
+              http_get {
+                path = readiness_probe.value.path
+                port = readiness_probe.value.port_name
+              }
+              initial_delay_seconds = 15
+              period_seconds = 10
+              timeout_seconds = 5
+              success_threshold = 1
+              failure_threshold = 6
+            }
           }
         }
       }
@@ -129,6 +165,11 @@ resource "kubernetes_service" "default" {
     name      = "${var.release}-svc"
     namespace = var.namespace
     labels    = local.labels
+
+    annotations = {
+      "cloud.google.com/neg"        = "{\"ingress\": true}"
+      "cloud.google.com/neg-status" = var.neg_status
+    }
   }
 
   spec {

@@ -16,6 +16,20 @@ variable "env" {
   default = null
 }
 
+variable "tcp_probes" {
+  type    = list(object({port_name=string}))
+  default = []
+}
+
+variable "http_probes" {
+  type    = list(object({path=string, port_name=string}))
+  default = []
+}
+
+variable "neg_status" {
+  default = null
+}
+
 output "service_name" {
   value = kubernetes_service.default.metadata[0].name
 }

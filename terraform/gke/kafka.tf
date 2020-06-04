@@ -17,6 +17,12 @@ module "stock_kafka" {
     }
   ]
 
+  tcp_probes = [
+    {
+      port_name = "client"
+    }
+  ]
+
   env = [
     {
       name  = "KAFKA_CFG_ZOOKEEPER_CONNECT"

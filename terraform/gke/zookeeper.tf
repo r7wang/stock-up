@@ -17,6 +17,12 @@ module "stock_zookeeper" {
     }
   ]
 
+  tcp_probes = [
+    {
+      port_name = "client"
+    }
+  ]
+
   env = [
     {
       name  = "ALLOW_ANONYMOUS_LOGIN"

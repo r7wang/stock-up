@@ -17,6 +17,12 @@ module "stock_influxdb" {
     },
   ]
 
+  tcp_probes = [
+    {
+      port_name = "client"
+    }
+  ]
+
   env = [
     {
       name  = "INFLUXDB_HTTP_AUTH_ENABLED"

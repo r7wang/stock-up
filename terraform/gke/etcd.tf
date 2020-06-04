@@ -17,6 +17,12 @@ module "stock_config" {
     }
   ]
 
+  tcp_probes = [
+    {
+      port_name = "client"
+    }
+  ]
+
   env = [
     {
       name  = "ALLOW_NONE_AUTHENTICATION"
