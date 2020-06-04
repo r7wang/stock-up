@@ -1,7 +1,7 @@
-module "stock-config" {
+module "stock_config" {
   source = "./stateful-service"
 
-  namespace  = kubernetes_namespace.prod.metadata[0].name
+  namespace  = local.namespace
   release    = "stock-config"
   image      = "gcr.io/${var.project}/etcd:3.4.7"
   mount_path = "/bitnami/etcd"

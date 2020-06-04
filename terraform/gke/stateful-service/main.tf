@@ -124,6 +124,28 @@ resource "kubernetes_stateful_set" "default" {
   }
 }
 
+resource "kubernetes_service" "default" {
+  metadata {
+    name      = "${var.release}-svc"
+    namespace = var.namespace
+    labels    = local.labels
+  }
+
+  spec {
+    type       = "ClusterIP"
+    selector   = local.labels
+
+    dynamic "port" {
+      for_each = var.ports
+      content {
+        name        = port.value.name
+        port        = port.value.port
+        target_port = port.value.name
+      }
+    }
+  }
+}
+
 resource "kubernetes_service" "headless" {
   metadata {
     name      = "${var.release}-svc-headless"
@@ -139,8 +161,8 @@ resource "kubernetes_service" "headless" {
     dynamic "port" {
       for_each = var.ports
       content {
-        name = port.value.name
-        port = port.value.port
+        name        = port.value.name
+        port        = port.value.port
         target_port = port.value.name
       }
     }

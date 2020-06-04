@@ -1,7 +1,11 @@
-module "stock-zookeeper" {
+locals {
+  zookeeper_port = 2181
+}
+
+module "stock_zookeeper" {
   source = "./stateful-service"
 
-  namespace  = kubernetes_namespace.prod.metadata[0].name
+  namespace  = local.namespace
   release    = "stock-zookeeper"
   image      = "gcr.io/${var.project}/zookeeper:3.6.1"
   mount_path = "/bitnami/zookeeper"
@@ -9,7 +13,7 @@ module "stock-zookeeper" {
   ports = [
     {
       name = "client"
-      port = 2181
+      port = local.zookeeper_port
     }
   ]
 
