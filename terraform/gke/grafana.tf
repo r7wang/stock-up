@@ -9,6 +9,14 @@ module "stock_grafana" {
   release    = "stock-grafana"
   image      = "gcr.io/${var.project}/grafana:6.7.3"
   mount_path = "/opt/bitnami/grafana/data"
+  neg_status = jsonencode(
+    {
+      network_endpoint_groups: {
+        3000: "k8s1-830769d5-prod-stock-grafana-svc-3000-393100fd"
+      }
+      zones: ["us-east4-c"]
+    }
+  )
 
   ports = [
     {
