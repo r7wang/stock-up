@@ -8,8 +8,8 @@ provider "google" {
   zone    = var.zone
 }
 
-module "stock-analyzer" {
-  vm_depends_on = [module.stock-config, module.stock-kafka, module.stock-influxdb]
+module "stock_analyzer" {
+  vm_depends_on = [module.stock_config, module.stock_kafka, module.stock_influxdb]
   source        = "./gce-container"
 
   name  = "stock-analyzer"
@@ -54,8 +54,8 @@ module "stock-analyzer" {
   ]
 }
 
-module "stock-query" {
-  vm_depends_on = [module.stock-config, module.stock-kafka]
+module "stock_query" {
+  vm_depends_on = [module.stock_config, module.stock_kafka]
   source        = "./gce-container"
 
   name      = "stock-query"
@@ -86,83 +86,6 @@ module "stock-query" {
     {
       name  = "QUOTE_API_TOKEN"
       value = var.quote_api_token
-    }
-  ]
-}
-
-module "stock-config" {
-  source = "./gce-container"
-
-  name  = "stock-config"
-  image = "gcr.io/${var.project}/etcd:3.4.7"
-  env = [
-    {
-      name = "ALLOW_NONE_AUTHENTICATION"
-      value = "yes"
-    }
-  ]
-}
-
-module "stock-kafka" {
-  vm_depends_on = [module.stock-zookeeper]
-  source        = "./gce-container"
-
-  name  = "stock-kafka"
-  image = "gcr.io/${var.project}/kafka:2.5.0"
-  env = [
-    {
-      name  = "KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE"
-      value = "true"
-    },
-    {
-      name  = "KAFKA_CFG_ZOOKEEPER_CONNECT"
-      value = "stock-zookeeper:2181"
-    },
-    {
-      name  = "ALLOW_PLAINTEXT_LISTENER"
-      value = "yes"
-    },
-    {
-      name  = "KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP"
-      value = "PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT"
-    },
-    {
-      name  = "KAFKA_CFG_LISTENERS"
-      value = "PLAINTEXT://:9092,PLAINTEXT_HOST://:29092"
-    },
-    {
-      name  = "KAFKA_CFG_ADVERTISED_LISTENERS"
-      value = "PLAINTEXT://stock-kafka:9092,PLAINTEXT_HOST://localhost:29092"
-    }
-  ]
-}
-
-module "stock-influxdb" {
-  source = "./gce-container"
-
-  name  = "stock-influxdb"
-  image = "gcr.io/${var.project}/influxdb:1.8.0"
-  env = [
-    {
-      name  = "INFLUXDB_HTTP_AUTH_ENABLED"
-      value = "false"
-    },
-    {
-      name  = "INFLUXDB_ADMIN_USER_PASSWORD"
-      value = var.influxdb_password
-    }
-  ]
-}
-
-module "stock-zookeeper" {
-  source = "./gce-container"
-
-  name  = "stock-zookeeper"
-  image = "gcr.io/${var.project}/zookeeper:3.6.1"
-  env = [
-    {
-      name  = "ALLOW_ANONYMOUS_LOGIN"
-      value = "yes"
     }
   ]
 }

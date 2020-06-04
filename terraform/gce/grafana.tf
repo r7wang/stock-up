@@ -1,4 +1,4 @@
-module "stock-grafana" {
+module "stock_grafana" {
   source = "./gce-container"
 
   name      = "stock-grafana"
@@ -19,7 +19,7 @@ resource "google_compute_instance_group" "grafana" {
 
   network = google_compute_network.stock_network.id
   zone    = "us-east4-c"
-  instances = [module.stock-grafana.vm_instance.self_link]
+  instances = [module.stock_grafana.vm_instance.self_link]
 
   named_port {
     name = "grafana"
