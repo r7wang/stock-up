@@ -40,7 +40,7 @@ resource "kubernetes_stateful_set" "default" {
           resources {
             requests {
               cpu    = "100m"
-              memory = "1Gi"
+              memory = "500Mi"
             }
 
             limits {
