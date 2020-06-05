@@ -6,28 +6,10 @@ Running the associated services will produce metrics and visualize them in Grafa
 
 ![Metrics](./doc/images/metrics.png)
 
-## Setup
-Setup one of the following message queues.
- * [Kafka](doc/setup/kafka)
- * [RabbitMQ](doc/setup/rabbitmq)
-
-Setup [influxdb](doc/setup/influxdb).
-
-Setup [grafana](doc/setup/grafana).
-
-Start consuming stock quotes.
-```bash
-docker-compose up -d stock-analyzer
-```
-
-Start generating stock quotes.
-```bash
-docker-compose up -d stock-query
-```
-
-Use dynamic configuration to define desired behavior.
- * [stock-query](stock_query)
- * [stock-analyzer](stock_analyzer)
+## Deployment
+Instructions are provided for the following environments.
+ * [development](doc/setup/development)
+ * [production](doc/setup/production)
 
 ## Architecture
 Detailed documentation can be found [here](doc/architecture).  
