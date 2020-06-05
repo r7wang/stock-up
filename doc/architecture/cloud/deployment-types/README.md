@@ -46,10 +46,34 @@ requiring a headless `Service` to [establish network identity](https://kubernete
 if using `StatefulSet`. `Service` communication is more frequently used for round-robin load balancing of stateless
 applications within the cluster.
 
-Using a single cluster avoids having to configure an internal load balancer to expose services from other clusters
-within the same VPC. It also has the advantage of reducing the cluster management fee, given that it's a fixed cost per
-cluster. There may be disadvantages in terms of cluster isolation, but this requires further investigation. This option
-currently seems to be the most viable.
+#### Advantages
+ * Compared to unmanaged VMs, there is not much additional work to provision a cluster and its applications using an
+   automated approach.
+ * Internal IPs and DNS (using the instance name) are automatically configured for service-to-service communication
+   within the same network.
+ * Cluster resources can be efficiently allocated to maximize resource usage.
+ * Cluster resources can be easily and independently scaled, without affecting underlying applications.
+ * Kubernetes applies an additional layer of abstraction around the concept of `Ingress`, meaning that load balancing
+   resources don't have to be explicitly managed.
+ * Application logs are isolated from node logging.
+ * Cluster management pricing is a fixed cost per cluster.
+ * Kubernetes provides effective approaches to defining liveness checks and health checks.
+
+#### Disadvantages
+ * Developers must understand some of the intricacies behind updating resources because they don't always update
+   correctly and are sometimes dependent on order of creation.
+ * Kubernetes is a non-trivial technology that requires an in-depth understanding of its concepts.
+
+#### Notes
+ * Using a single cluster avoids having to configure an internal load balancer to expose services from other clusters
+   within the same VPC.
+ * It also has the advantage of reducing the cluster management fee, given that it's a fixed cost per
+   cluster.
+ * There may be disadvantages in terms of cluster isolation, but this requires further investigation.
+
+#### Assessment
+This option currently seems to be the most viable for a long-term solution involving multiple services at scale. The
+complexity of Kubernetes may not be warranted below a certain scale.
 
 ### Google Kubernetes Engine: Multiple Clusters
 This involves creating a cluster for each application, which shares a lot of similarities with using a single cluster.
