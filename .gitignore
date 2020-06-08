@@ -1,12 +1,15 @@
 __pycache__
-.DS_Store
 .etcd_data
 .grafana_data
-.idea
 .influxdb
 .kafka
-.python-version
 .rabbitmq_data
+
+# Dev Environment
+.DS_Store
+.idea
+.node-version
+.python-version
 
 # Secrets
 *.pem
