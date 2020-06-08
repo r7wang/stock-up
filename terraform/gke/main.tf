@@ -1,3 +1,11 @@
+terraform {
+  backend "gcs" {
+    bucket      = "stock-up-terraform-state"
+    prefix      = "prod/gke"
+    credentials = "credentials.json"
+  }
+}
+
 locals {
   namespace = kubernetes_namespace.prod.metadata[0].name
 }
