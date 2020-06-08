@@ -26,9 +26,19 @@ resource "aws_iam_group_membership" "default" {
   ]
 }
 
-resource "aws_iam_group_policy_attachment" "default" {
+resource "aws_iam_group_policy_attachment" "stock_group_dynamodb" {
+  group      = aws_iam_group.default.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess"
+}
+
+resource "aws_iam_group_policy_attachment" "stock_group_ecs" {
   group      = aws_iam_group.default.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonECS_FullAccess"
+}
+
+resource "aws_iam_group_policy_attachment" "stock_group_s3" {
+  group      = aws_iam_group.default.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonS3FullAccess"
 }
 
 resource "aws_iam_user" "prod" {
