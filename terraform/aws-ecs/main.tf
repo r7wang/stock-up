@@ -14,12 +14,14 @@ terraform {
 }
 
 locals {
-  region = "us-east-2"
+  environment = "prod"
+  region      = "us-east-2"
+  project     = "stock-up"
 }
 
 provider "aws" {
   version = "~> 2.0"
 
+  profile = local.environment
   region  = local.region
-  profile = "prod"
 }
