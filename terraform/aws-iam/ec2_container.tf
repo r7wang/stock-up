@@ -14,7 +14,7 @@ data "aws_iam_policy_document" "container_instance_ec2_assume_role" {
 
 resource "aws_iam_role" "container_instance_ec2" {
   name               = "ContainerInstanceRoleForEC2"
-  path               = "/stock/"
+  path               = local.path
   assume_role_policy = data.aws_iam_policy_document.container_instance_ec2_assume_role.json
 }
 

@@ -1,6 +1,6 @@
 resource "aws_iam_user" "prod" {
-  name = "prod"
-  path = "/stock/"
+  name = local.environment
+  path = var.path
 }
 
 resource "aws_iam_access_key" "prod" {
