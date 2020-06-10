@@ -63,6 +63,40 @@ resource "aws_main_route_table_association" "stock" {
   route_table_id = aws_route_table.stock.id
 }
 
+resource "aws_security_group" "stock" {
+  name   = "stock"
+  vpc_id = aws_vpc.stock.id
+
+  ingress {
+    description = "Allow ingress from security group"
+
+    protocol  = "-1"
+    from_port = 0
+    to_port   = 0
+    self      = true
+  }
+
+  ingress {
+    description = "Allow SSH access"
+
+    protocol  = "tcp"
+    from_port = 22
+    to_port   = 22
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    protocol    = "-1"
+    from_port   = 0
+    to_port     = 0
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "sg-stock"
+  }
+}
+
 resource "aws_internet_gateway" "stock" {
   vpc_id = aws_vpc.stock.id
 
