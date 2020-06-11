@@ -11,6 +11,11 @@ resource "aws_iam_group_membership" "default" {
   ]
 }
 
+resource "aws_iam_group_policy_attachment" "cloudmap" {
+  group      = aws_iam_group.default.name
+  policy_arn = "arn:aws:iam::aws:policy/AWSCloudMapFullAccess"
+}
+
 resource "aws_iam_group_policy_attachment" "dynamodb" {
   group      = aws_iam_group.default.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess"
