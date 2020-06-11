@@ -2,6 +2,7 @@ module "stock_config" {
   source = "./ecs-container"
 
   name                           = "stock-config"
+  image                          = "${local.ecr_repository}/etcd:3.4.7"
   task_definition_template       = "${path.module}/templates/stock-config-task-def.json"
   cluster_arn                    = aws_ecs_cluster.default.arn
   subnet_id                      = aws_subnet.east_2b.id

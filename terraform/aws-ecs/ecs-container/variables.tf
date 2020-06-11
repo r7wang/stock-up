@@ -6,6 +6,10 @@ variable "task_definition_template" {
   description = "Path where the task definition template can be found"
 }
 
+variable "image" {
+  description = "Container image to use"
+}
+
 variable "cluster_arn" {}
 
 variable "subnet_id" {}

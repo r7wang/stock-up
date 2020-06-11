@@ -2,7 +2,8 @@ data "template_file" "task_def" {
   template = file(var.task_definition_template)
 
   vars = {
-    filesystem_id = aws_efs_file_system.default.id
+    name  = var.name
+    image = var.image
   }
 }
 

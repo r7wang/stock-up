@@ -14,9 +14,10 @@ terraform {
 }
 
 locals {
-  environment = "prod"
-  region      = "us-east-2"
-  project     = "stock-up"
+  environment    = "prod"
+  region         = "us-east-2"
+  project        = "stock-up"
+  ecr_repository = "${var.account}.dkr.ecr.${local.region}.amazonaws.com"
 }
 
 provider "aws" {
