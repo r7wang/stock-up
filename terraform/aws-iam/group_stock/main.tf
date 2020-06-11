@@ -21,9 +21,19 @@ resource "aws_iam_group_policy_attachment" "ec2" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonEC2FullAccess"
 }
 
+resource "aws_iam_group_policy_attachment" "ecr" {
+  group      = aws_iam_group.default.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryFullAccess"
+}
+
 resource "aws_iam_group_policy_attachment" "ecs" {
   group      = aws_iam_group.default.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonECS_FullAccess"
+}
+
+resource "aws_iam_group_policy_attachment" "efs" {
+  group      = aws_iam_group.default.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonElasticFileSystemFullAccess"
 }
 
 resource "aws_iam_group_policy_attachment" "s3" {

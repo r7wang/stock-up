@@ -79,9 +79,9 @@ resource "aws_security_group" "stock" {
   ingress {
     description = "Allow SSH access"
 
-    protocol  = "tcp"
-    from_port = 22
-    to_port   = 22
+    protocol    = "tcp"
+    from_port   = 22
+    to_port     = 22
     cidr_blocks = ["0.0.0.0/0"]
   }
 
@@ -97,10 +97,40 @@ resource "aws_security_group" "stock" {
   }
 }
 
+resource "aws_security_group" "efs" {
+  name   = "efs"
+  vpc_id = aws_vpc.stock.id
+
+  ingress {
+    description = "Allow NFS access"
+
+    protocol        = "tcp"
+    from_port       = 2049
+    to_port         = 2049
+    security_groups = [aws_security_group.stock.id]
+  }
+
+  egress {
+    protocol    = "-1"
+    from_port   = 0
+    to_port     = 0
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "sg-efs"
+  }
+}
+
 resource "aws_internet_gateway" "stock" {
   vpc_id = aws_vpc.stock.id
 
   tags = {
     Name = "ig-stock"
   }
+}
+
+resource "aws_service_discovery_private_dns_namespace" "stock" {
+  name = "stock.app"
+  vpc  = aws_vpc.stock.id
 }

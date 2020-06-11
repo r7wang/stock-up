@@ -1,0 +1,29 @@
+[
+    {
+        "name": "stock-config",
+        "image": "650209405916.dkr.ecr.us-east-2.amazonaws.com/etcd:3.4.7",
+        "cpu": 100,
+        "memory": 250,
+        "memoryReservation": 150,
+        "portMappings": [
+            {
+                "containerPort": 2379
+            },
+            {
+                "containerPort": 2380
+            }
+        ],
+        "environment": [
+            {
+                "name": "ALLOW_NONE_AUTHENTICATION",
+                "value": "yes"
+            }
+        ],
+        "mountPoints": [
+            {
+                "sourceVolume": "data-volume",
+                "containerPath": "/bitnami/etcd"
+            }
+        ]
+    }
+]
