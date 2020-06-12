@@ -2,12 +2,17 @@ variable "name" {
   description = "Name of the deployment"
 }
 
-variable "task_definition_template" {
-  description = "Path where the task definition template can be found"
-}
-
 variable "image" {
   description = "Container image to use"
+}
+
+variable "admin_password" {
+  description = "Admin password, if applicable"
+  default     = ""
+}
+
+variable "task_definition_template" {
+  description = "Path where the task definition template can be found"
 }
 
 variable "cluster_arn" {}

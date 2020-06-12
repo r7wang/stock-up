@@ -2,8 +2,9 @@ data "template_file" "task_def" {
   template = file(var.task_definition_template)
 
   vars = {
-    name  = var.name
-    image = var.image
+    name           = var.name
+    image          = var.image
+    admin_password = var.admin_password
   }
 }
 
@@ -62,6 +63,8 @@ resource "aws_ecs_service" "default" {
     security_groups  = [var.ecs_security_group_id]
     assign_public_ip = false
   }
+
+  depends_on = [aws_efs_mount_target.east_2b]
 }
 
 resource "aws_service_discovery_service" "default" {
