@@ -25,6 +25,18 @@ provider "aws" {
   region  = local.region
 }
 
+module "stock_query" {
+  source = "./ecr-repository"
+
+  name = "stock-query"
+}
+
+module "stock_analyzer" {
+  source = "./ecr-repository"
+
+  name = "stock-analyzer"
+}
+
 module "etcd" {
   source = "./ecr-repository"
 
@@ -35,4 +47,22 @@ module "zookeeper" {
   source = "./ecr-repository"
 
   name = "zookeeper"
+}
+
+module "kafka" {
+  source = "./ecr-repository"
+
+  name = "kafka"
+}
+
+module "influxdb" {
+  source = "./ecr-repository"
+
+  name = "influxdb"
+}
+
+module "grafana" {
+  source = "./ecr-repository"
+
+  name = "grafana"
 }
