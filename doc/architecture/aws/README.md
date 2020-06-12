@@ -139,3 +139,7 @@ might prove to be challenging.
 Fortunately, there is a workaround through the use of [elastic network interface trunking](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/container-instance-eni.html),
 which greatly increases the number of tasks that can be run on a given instance, as long as the instance supports this
 mode of operation ([details](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/container-instance-eni.html)).
+
+## ECS Internet Access
+Containers running under ECS that use `awsvpc` networking do not have access to the internet by default and must be
+explicitly configured to do so through a NAT gateway. Details can be found [here](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task-networking.html).

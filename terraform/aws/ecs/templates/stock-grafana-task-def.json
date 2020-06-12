@@ -1,0 +1,26 @@
+[
+    {
+        "name": "${name}",
+        "image": "${image}",
+        "cpu": 100,
+        "memory": 250,
+        "memoryReservation": 150,
+        "portMappings": [
+            {
+                "containerPort": 3000
+            }
+        ],
+        "environment": [
+            {
+                "name": "GF_SECURITY_ADMIN_PASSWORD",
+                "value": "${admin_password}"
+            }
+        ],
+        "mountPoints": [
+            {
+                "sourceVolume": "data-volume",
+                "containerPath": "/opt/bitnami/grafana/data"
+            }
+        ]
+    }
+]
