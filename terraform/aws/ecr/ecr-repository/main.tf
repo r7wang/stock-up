@@ -1,5 +1,5 @@
 resource "aws_ecr_repository" "default" {
-  name = "etcd"
+  name = var.name
 
   image_tag_mutability = "MUTABLE"
 

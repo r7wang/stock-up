@@ -13,11 +13,7 @@ resource "aws_autoscaling_group" "default" {
   health_check_grace_period = 600
   termination_policies      = ["Default"]
 
-  vpc_zone_identifier = [
-    data.aws_subnet.east_2a.id,
-    data.aws_subnet.east_2b.id,
-    data.aws_subnet.east_2c.id,
-  ]
+  vpc_zone_identifier = [data.aws_subnet.east_2b.id]
 
   enabled_metrics = [
     "GroupMinSize",
