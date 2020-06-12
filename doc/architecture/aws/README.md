@@ -128,3 +128,14 @@ provisions under the hood.
  * Large containers launch much more slowly on Fargate, as opposed to EC2.
  * Sharing VM instances can be beneficial for on-disk caches that are used across multiple containers.
  * Logging and monitoring can be run once per VM instance instead of once per container.
+
+## ECS Task Limits
+Task limits on ECS depend on the EC2 instance types that are running, the amount of CPU, memory, and number of
+interfaces supported. When `awsvpc` networking is used for tasks, the tasks consume a network interface. As per the
+limits defined [here](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-eni.html), even instances up to
+`t3.large` in size don't support more than 3 network interfaces, hence trying to run multiple tasks on a single host
+might prove to be challenging.
+
+Fortunately, there is a workaround through the use of [elastic network interface trunking](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/container-instance-eni.html),
+which greatly increases the number of tasks that can be run on a given instance, as long as the instance supports this
+mode of operation ([details](https://docs.aws.amazon.com/AmazonECS/latest/developerguide/container-instance-eni.html)).

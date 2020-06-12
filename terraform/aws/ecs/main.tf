@@ -26,3 +26,39 @@ provider "aws" {
   profile = local.environment
   region  = local.region
 }
+
+data "aws_vpc" "stock" {
+  tags = {
+    Name = "vpc-stock"
+  }
+}
+
+data "aws_subnet" "east_2a" {
+  tags = {
+    Name = "subnet-stock-east-2a"
+  }
+}
+
+data "aws_subnet" "east_2b" {
+  tags = {
+    Name = "subnet-stock-east-2b"
+  }
+}
+
+data "aws_subnet" "east_2c" {
+  tags = {
+    Name = "subnet-stock-east-2c"
+  }
+}
+
+data "aws_security_group" "stock" {
+  tags = {
+    Name = "sg-stock"
+  }
+}
+
+data "aws_security_group" "efs" {
+  tags = {
+    Name = "sg-efs"
+  }
+}

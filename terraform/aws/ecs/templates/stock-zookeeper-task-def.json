@@ -1,0 +1,26 @@
+[
+    {
+        "name": "${name}",
+        "image": "${image}",
+        "cpu": 100,
+        "memory": 250,
+        "memoryReservation": 150,
+        "portMappings": [
+            {
+                "containerPort": 2181
+            }
+        ],
+        "environment": [
+            {
+                "name": "ALLOW_ANONYMOUS_LOGIN",
+                "value": "yes"
+            }
+        ],
+        "mountPoints": [
+            {
+                "sourceVolume": "data-volume",
+                "containerPath": "/bitnami/zookeeper"
+            }
+        ]
+    }
+]

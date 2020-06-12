@@ -35,3 +35,9 @@ Install the ECR helper.
 ```bash
 brew install docker-credential-helper-ecr
 ```
+
+### Global Account Settings
+Enable elastic network interface trunking.
+```bash
+aws ecs put-account-setting-default --profile prod --name awsvpcTrunking --value enabled --region us-east-2
+```

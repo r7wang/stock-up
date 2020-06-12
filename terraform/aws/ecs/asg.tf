@@ -14,9 +14,9 @@ resource "aws_autoscaling_group" "default" {
   termination_policies      = ["Default"]
 
   vpc_zone_identifier = [
-    aws_subnet.east_2a.id,
-    aws_subnet.east_2b.id,
-    aws_subnet.east_2c.id,
+    data.aws_subnet.east_2a.id,
+    data.aws_subnet.east_2b.id,
+    data.aws_subnet.east_2c.id,
   ]
 
   enabled_metrics = [
