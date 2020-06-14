@@ -26,18 +26,13 @@ data "template_file" "user_data" {
   }
 }
 
-resource "aws_key_pair" "default" {
-  key_name   = "ecs-ssh"
-  public_key = file("ecs-ssh.pub")
-}
-
 resource "aws_launch_template" "default" {
   name_prefix = "lt-${local.environment}-"
 
   instance_type          = "m5.large"
   image_id               = join("", data.aws_ami.default.*.image_id)
   user_data              = base64encode(data.template_file.user_data.rendered)
-  key_name               = aws_key_pair.default.key_name
+  key_name               = "ecs-ssh"
   vpc_security_group_ids = [data.aws_security_group.stock.id]
 
   disable_api_termination              = false
