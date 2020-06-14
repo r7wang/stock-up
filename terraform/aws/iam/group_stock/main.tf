@@ -36,9 +36,24 @@ resource "aws_iam_group_policy_attachment" "ecs" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonECS_FullAccess"
 }
 
+resource "aws_iam_group_policy_attachment" "elastic_beanstalk" {
+  group      = aws_iam_group.default.name
+  policy_arn = "arn:aws:iam::aws:policy/AWSElasticBeanstalkFullAccess"
+}
+
 resource "aws_iam_group_policy_attachment" "efs" {
   group      = aws_iam_group.default.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonElasticFileSystemFullAccess"
+}
+
+resource "aws_iam_group_policy_attachment" "iam_read" {
+  group      = aws_iam_group.default.name
+  policy_arn = "arn:aws:iam::aws:policy/IAMReadOnlyAccess"
+}
+
+resource "aws_iam_group_policy_attachment" "lambda" {
+  group      = aws_iam_group.default.name
+  policy_arn = "arn:aws:iam::aws:policy/AWSLambdaFullAccess"
 }
 
 resource "aws_iam_group_policy_attachment" "s3" {

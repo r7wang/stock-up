@@ -33,21 +33,9 @@ data "aws_vpc" "stock" {
   }
 }
 
-data "aws_subnet" "east_2a" {
-  tags = {
-    Name = "subnet-stock-east-2a"
-  }
-}
-
 data "aws_subnet" "east_2b" {
   tags = {
     Name = "subnet-stock-east-2b"
-  }
-}
-
-data "aws_subnet" "east_2c" {
-  tags = {
-    Name = "subnet-stock-east-2c"
   }
 }
 
